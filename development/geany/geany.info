@@ -1,0 +1,6 @@
+PKGNAME=geany
+VERSION=1.22
+LICENSE=GPL-2_Scintilla
+HOMEPAGE=http://www.geany.org/
+DOWNLOAD=http://download.geany.org/geany-1.22.tar.bz2
+MD5SUM=0672077fe83e2a739aa0eaca426aacf0

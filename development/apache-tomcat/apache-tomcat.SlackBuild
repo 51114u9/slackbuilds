@@ -1,0 +1,216 @@
+#!/bin/sh
+
+# Copyright 2007-2012 Marco Antonio Frias B., Cochabamba, BO
+# All rights reserved.
+#
+# Redistribution and use of this script, with or without modification, is
+# permitted provided that the following conditions are met:
+#
+# 1. Redistributions of this script must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#
+#  THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED
+#  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+#  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO
+#  EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+#  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+#  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+#  OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+#  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+#  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+#  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+## Set initial variables:
+
+# copy docs?
+USE_DOCS=${USE_DOCS:-"YES"}
+# copy collections of examples?
+USE_EXAMPLES=${USE_EXAMPLES:-"YES"}
+
+## Name, version and buildtag of the package
+PRGNAME=apache-tomcat
+VERSION=7.0.30
+ARCH=noarch
+RELEASE=1
+BUILDTAG=mfb
+PKGTYPE=txz
+
+## The documentation files:
+DOCFILES="LICENSE NOTICE RELEASE-NOTES RUNNING.txt"
+
+## Where do we look for sources?
+SRCDIR=$(cd $(dirname $0); pwd)
+
+## Place to build (TMP) package (PKG) and output (OUTPUT) the program:
+TMP=${TMP:-/tmp/build}
+PKG=$TMP/package-${PRGNAME}
+OUTPUT=${OUTPUT:-/tmp}
+
+SOURCE="$SRCDIR/${PRGNAME}-${VERSION}.tar.gz"
+SRCURL="$(grep DOWNLOAD ${PRGNAME}.info | cut -d = -f 2)"
+
+##
+## --- with a little luck, you won't have to edit below this point ---
+##
+
+## I don't care if the user says "no", "NO", "yes" or "YES":
+USE_DOCS=$(echo $USE_DOCS | tr 'a-z' 'A-Z')
+USE_EXAMPLES=$(echo $USE_EXAMPLES | tr 'a-z' 'A-Z')
+
+## Exit the script on errors:
+set -e
+trap 'echo -e "\n$0 FAILED at line ${LINENO}" | tee $TMP/error-${PRGNAME}.log' ERR
+
+## Catch unitialized variables:
+set -u
+P1=${1:-1}
+
+## Create working directories:
+mkdir -p $OUTPUT             # place for the package to be saved
+mkdir -p $TMP/tmp-${PRGNAME} # location to build the source
+mkdir -p $PKG                # place for the package to be built
+
+rm -rf $PKG/*                # always erase old package's contents
+rm -rf $TMP/tmp-${PRGNAME}/* # remove the remnants of previous build
+
+## Source file availability:
+if ! [ -f ${SOURCE} ]; then
+  if ! [ "x${SRCURL}" == "x" ]; then
+    # Check if the $SRCDIR is writable at all - if not, download to $OUTPUT
+    [ -w "$SRCDIR" ] || SOURCE="$OUTPUT/$(basename $SOURCE)"
+    echo -e "\nSource '$(basename ${SOURCE})' not available yet..."
+    echo -e "Will download file to $(dirname $SOURCE)"
+    wget -nv -T 20 -O "${SOURCE}" "${SRCURL}" || true
+    if [ $? -ne 0 -o ! -s "${SOURCE}" ]; then
+      echo -e "Downloading '$(basename ${SOURCE})' failed... aborting the build.\n"
+      mv -f "${SOURCE}" "${SOURCE}".FAIL
+      exit 1
+    fi
+  else
+    echo -e "\nFile '$(basename ${SOURCE})' not available... aborting the build.\n"
+    exit 1
+  fi
+fi
+
+## --- PACKAGE BUILDING ---
+cd $TMP/tmp-${PRGNAME}
+
+echo -e "\nExtracting the source archive(s) for $PRGNAME...\n"
+sleep 1
+
+tar -xzvf ${SOURCE}
+mv ${PRGNAME}-${VERSION} ${PRGNAME}
+cd ${PRGNAME}
+find . \( -perm 777 -o -perm 775 -o -perm 711 -o -perm 555 -o -perm 511 \) -exec chmod 755 {} \;
+find . \( -perm 666 -o -perm 664 -o -perm 600 -o -perm 444 -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
+chown -R root.root .
+
+echo -e "\nInstalling $PRGNAME...\n"
+sleep 1
+
+## Removing unnecessary (windows and compress) files:
+rm -rf bin/*.{bat,gz}
+
+## Creating dir structure:
+mkdir -p $PKG/etc/apache-tomcat
+mkdir -p $PKG/etc/{rc.d,profile.d}
+mkdir -p $PKG/usr/share/apache-tomcat
+mkdir -p $PKG/var/cache/apache-tomcat
+mkdir -p $PKG/var/lib/apache-tomcat
+mkdir -p $PKG/var/log/apache-tomcat
+mkdir -p $PKG/var/tmp/apache-tomcat
+
+## Copying files:
+cp -pR bin $PKG/usr/share/apache-tomcat
+find $PKG/usr/share/apache-tomcat/bin -type f -exec chmod 644 {} \;
+find $PKG/usr/share/apache-tomcat/bin -type f -name '*.sh' -exec chmod 755 {} \;
+
+cp -pR conf/* $PKG/etc/apache-tomcat
+for configfile in $PKG/etc/apache-tomcat/*; do mv $configfile $configfile.new; done
+find $PKG/etc/apache-tomcat -type f -exec chmod 644 {} \;
+
+install -m 644 ${SRCDIR}/rc.tomcat.new $PKG/etc/rc.d
+
+cat > $PKG/etc/profile.d/catalina.csh << EOL
+#!/bin/csh
+setenv CATALINA_HOME /usr/share/apache-tomcat
+EOL
+
+cat > $PKG/etc/profile.d/catalina.sh << EOL
+#!/bin/sh
+export CATALINA_HOME=/usr/share/apache-tomcat
+EOL
+
+find $PKG/etc/profile.d -type f -exec chmod 755 {} \;
+
+cp -pR lib $PKG/usr/share/apache-tomcat
+find $PKG/usr/share/apache-tomcat/lib -type f -exec chmod 644 {} \;
+
+cp -pR webapps/* $PKG/var/lib/apache-tomcat
+find $PKG/var/lib/apache-tomcat -type d -exec chmod 755 {} \;
+find $PKG/var/lib/apache-tomcat -type f -exec chmod 644 {} \;
+
+## Remove the documentation if we are allowing it:
+if [ "${USE_DOCS}" == "NO" ]; then
+  rm -rf $PKG/var/lib/apache-tomcat/docs
+fi
+
+## Remove the examples if we are allowing it:
+if [ "${USE_EXAMPLES}" == "NO" ]; then
+  rm -rf $PKG/var/lib/apache-tomcat/examples
+fi
+
+## Linking (symlink) the directories:
+( cd $PKG/usr/share/apache-tomcat ; ln -sf /etc/apache-tomcat conf )
+( cd $PKG/usr/share/apache-tomcat ; ln -sf /var/log/apache-tomcat logs )
+( cd $PKG/usr/share/apache-tomcat ; ln -sf /var/tmp/apache-tomcat temp )
+( cd $PKG/usr/share/apache-tomcat ; ln -sf /var/lib/apache-tomcat webapps )
+( cd $PKG/usr/share/apache-tomcat ; ln -sf /var/cache/apache-tomcat work )
+
+## Add documentation:
+mkdir -p $PKG/usr/doc/${PRGNAME}-${VERSION}
+cp -pR $DOCFILES $PKG/usr/doc/${PRGNAME}-${VERSION} || true
+find $PKG/usr/doc/${PRGNAME}-${VERSION} -type d -exec chmod 755 {} \;
+find $PKG/usr/doc/${PRGNAME}-${VERSION} -type f -exec chmod 644 {} \;
+chown -R root.root $PKG/usr/doc/${PRGNAME}-${VERSION}
+
+echo -e "\nBuilding package...\n"
+sleep 1
+
+## Add slackbuild files:
+mkdir -p $PKG/usr/src/slackbuilds/${PRGNAME}
+(cd $PKG/usr/src/slackbuilds/${PRGNAME}
+install -m 644 $SRCDIR/ChangeLog .
+install -m 644 $SRCDIR/slack-desc .
+install -m 644 $SRCDIR/doinst.sh .
+install -m 644 $SRCDIR/${PRGNAME}.info .
+install -m 644 $SRCDIR/${PRGNAME}.SlackBuild .
+install -m 644 $SRCDIR/rc.tomcat.new .
+)
+
+## Add a package description:
+mkdir -p $PKG/install
+install -m 644 $SRCDIR/doinst.sh $PKG/install
+install -m 644 $SRCDIR/slack-desc $PKG/install
+
+cat > $OUTPUT/${PRGNAME}-${VERSION}-${ARCH}-${RELEASE}${BUILDTAG}.dep << EOL
+jre >= 6 | jdk >= 6
+EOL
+
+cat > $OUTPUT/${PRGNAME}-${VERSION}-${ARCH}-${RELEASE}${BUILDTAG}.sug << EOL
+tomcat-native
+EOL
+
+## Build the package:
+cd $PKG
+makepkg \
+    -l y -c n \
+    $OUTPUT/${PRGNAME}-${VERSION}-${ARCH}-${RELEASE}${BUILDTAG}.txz \
+    2>&1 | tee $TMP/makepkg-${PRGNAME}.log
+
+echo -e "Your \"$PRGNAME\" package is complete. It is located in $OUTPUT\n"
+
+if [ "$P1" = "--cleanup" ]; then
+  rm -rf $TMP/tmp-${PRGNAME}
+  rm -rf $PKG
+fi

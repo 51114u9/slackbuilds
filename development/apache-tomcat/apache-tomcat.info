@@ -1,0 +1,6 @@
+PKGNAME=apache-tomcat
+VERSION=7.0.30
+LICENSE=Apache-2
+HOMEPAGE=http://tomcat.apache.org/
+DOWNLOAD=http://apache.osuosl.org/tomcat/tomcat-7/v7.0.30/bin/apache-tomcat-7.0.30.tar.gz
+MD5SUM=48c19559f28aa6f189bcb0b2c2e563cb

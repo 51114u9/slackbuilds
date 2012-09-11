@@ -1,0 +1,18 @@
+* 7.0.30-1: 2012-09-10, New release
+* 7.0.28-1: 2012-06-19, New release
+* 7.0.27-1: 2012-05-08, New release
+* 7.0.22-1: 2011-11-09, New release
+* 7.0.19-1: 2011-06-19, New release
+* 7.0.16-1: 2011-06-17, New release
+* 7.0.14-1: 2011-05-21, New release for slackware 13.37
+* 6.0.32-1: 2011-02-12, New release
+* 6.0.29-1: 2010-08-22, New release for Slackware 13.1
+* 6.0.28-1: 2010-06-18, New release
+* 6.0.26-2: 2010-05-15, Re-worked SlackBuild (64bit and JAVA_OPTS/CATALINA_OPTS variables supported)
+* 6.0.26-1: 2010-03-21, New release
+* 6.0.24-1: 2010-01-23, New release for Slackware 13.0
+* 6.0.20-1: 2009-12-11, New release for Slackware 12.2
+* 6.0.18-1: 2008-09-13, New release for Slackware 12.1
+* 6.0.16-2: 2008-06-02, Re-worked SlackBuild
+* 6.0.16-1: 2008-02-13, New release for Slackware 12.0
+* 6.0.14-1: 2007-11-24, First SlackBuild for Slackware 11.0

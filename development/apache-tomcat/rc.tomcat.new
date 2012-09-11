@@ -1,0 +1,237 @@
+#!/bin/sh
+
+# Copyright 2007-2012 Marco Antonio Frias B., Cochabamba, BO
+# All rights reserved.
+#
+# Redistribution and use of this script, with or without modification, is
+# permitted provided that the following conditions are met:
+#
+# 1. Redistributions of this script must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#
+#  THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED
+#  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+#  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO
+#  EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+#  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+#  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+#  OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+#  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+#  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+#  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+# NOTE:
+#
+# This script can be run directly from a root command shell, using:
+#
+# # /etc/rc.d/rc.tomcat start
+# or
+# # /etc/rc.d/rc.tomcat stop
+#
+# For automatic startup, it should be added to /etc/rc.d/rc.local. A sample
+# startup line:
+#
+# if [ -x /etc/rc.d/rc.tomcat ]; then
+#   /etc/rc.d/rc.tomcat start
+# fi
+#
+# For automatic shutdown, it should be added to /etc/rc.d/rc.local_shutdown. A
+# sample startup line:
+#
+# if [ -x /etc/rc.d/rc.tomcat ]; then
+#   /etc/rc.d/rc.tomcat stop
+# fi
+#
+
+# Memory Initial (Minimum) and Maximum Settings
+#
+# The following settings will prevent accumulating Java Memory Leaks from
+# consuming all your memory.
+#
+# -d32|-d64      use a 32/64-bit data model if available
+# -server        select the "server" VM
+# -Xms<size>m|g  set initial Java heap size, m or M = MB and g or G = GB
+# -Xmx<size>m|g  set maximum Java heap size, m or M = MB and g or G = GB
+# -XX:MaxPermSize=<size>m size of the permanent generation
+#
+# (Since memory relocation is slow in java prevent it) You can also use for
+# 32-bit system:
+#
+#CATALINA_OPTS="-d32 -server -Xms100m -Xmx1024m -XX:MaxPermSize=256m"
+#
+# Or for 64-bit system:
+#
+#CATALINA_OPTS="-d64 -server -Xms100m -Xmx1024m -XX:MaxPermSize=256m"
+#
+CATALINA_OPTS=""
+
+case "$( uname -m )" in
+  i[3456]86) LIBDIRSUFFIX=""
+             ;;
+  x86_64)    LIBDIRSUFFIX="64"
+             ;;
+esac
+
+PATH="/bin:/usr/bin:/sbin:/usr/sbin"
+
+TOMCAT_HOME="/usr/share/apache-tomcat"
+TOMCAT_USER=tomcat
+TOMCAT_LOG="/var/log/apache-tomcat/server_`date +%F`.log"
+
+DAEMON_START="$TOMCAT_HOME/bin/startup.sh"
+DAEMON_STOP="$TOMCAT_HOME/bin/shutdown.sh"
+
+PIDFILE="/var/run/apache-tomcat.pid"
+PID=-1
+
+# Only start if we can find the daemon
+if [ ! -x $DAEMON_START ] || [ ! -x $DAEMON_STOP ]; then
+  echo "Apache Tomcat is not installed correctly." >&2
+  exit 1
+else
+  export PATH
+fi
+
+check_run() {
+  if [ -f "$PIDFILE" ]; then
+    read LINE < "$PIDFILE"
+    [ -z "${LINE//[0-9]/}" -a -d "/proc/$LINE" ] && PID="$LINE"
+    if [ -n "$PID" ]; then
+      return 0
+    fi
+    return 1 # Apache Tomcat is dead and /var/run pid file exists
+  fi
+  return 3 # Apache Tomcat is not running
+}
+
+check_tomcat_env() {
+  def_uid=8080
+  def_gid=8080
+
+  # Confirm that the 'tomcat' user and group exist
+  grep -q "^$TOMCAT_USER:" /etc/group || groupadd -g $def_gid $TOMCAT_USER || exit 1
+  grep -q "^$TOMCAT_USER:" /etc/passwd || useradd -c "Apache Tomcat" -d $TOMCAT_HOME -g $TOMCAT_USER -u $def_uid $TOMCAT_USER || exit 1
+
+  # Confirm that log file exists.
+  if [ ! -e $TOMCAT_LOG ]; then
+    touch $TOMCAT_LOG
+    chown $TOMCAT_USER.$TOMCAT_USER $TOMCAT_LOG
+    chmod go-rwx $TOMCAT_LOG
+  fi
+}
+
+start() {
+  # See if it's already running. Look *only* at the pid file
+  check_run
+
+  case $? in
+   0)
+    echo "Apache Tomcat (pid $PID) is running..."
+    exit 0
+    ;;
+   1)
+    echo "Apache Tomcat is dead but pid file exists..."
+    exit 1
+    ;;
+  esac
+
+  check_tomcat_env
+
+  echo "" >> $TOMCAT_LOG
+  echo "Starting Apache Tomcat Server at `date +%X`" >> $TOMCAT_LOG
+  echo "" >> $TOMCAT_LOG
+  echo -n "Starting Apache Tomcat Server: "
+  su - $TOMCAT_USER -c \
+  "export JAVA_HOME=/usr/lib${LIBDIRSUFFIX}/java; export CATALINA_OPTS='$CATALINA_OPTS'; $DAEMON_START" >> $TOMCAT_LOG 2>&1
+
+  if [ $? -eq 0 ]; then
+    sleep 6
+    echo "ok"
+    PID="$(ps ax --width=1000 | grep "[o]rg.apache.catalina.startup.Bootstrap start" | awk '{print $1}')"
+    echo "$PID" > $PIDFILE
+  else
+    echo "failed"
+  fi
+}
+
+stop() {
+  # See if it's already running. Look *only* at the pid file
+  check_run
+
+  case $? in
+   1)
+    echo "Apache Tomcat is dead but pid file exists..."
+    exit 1
+    ;;
+   3)
+    echo "Apache Tomcat is not running..."
+    exit 0
+    ;;
+  esac
+
+  check_tomcat_env
+
+  echo "" >> $TOMCAT_LOG
+  echo "Stopping Apache Tomcat Server at `date +%X`" >> $TOMCAT_LOG
+  echo "" >> $TOMCAT_LOG
+  echo -n "Stopping Apache Tomcat Server: "
+  su - $TOMCAT_USER -c \
+  "export JAVA_HOME=/usr/lib${LIBDIRSUFFIX}/java; export JAVA_OPTS='$CATALINA_OPTS'; $DAEMON_STOP" >> $TOMCAT_LOG 2>&1
+
+  if [ $? -eq 0 ]; then
+    sleep 6
+    echo "ok"
+    rm -rf $PIDFILE
+  else
+    echo "failed"
+  fi
+}
+
+restart() {
+  stop
+  sleep 1
+  start
+}
+
+status() {
+  # See if it's already running. Look *only* at the pid file
+  check_run
+
+  case "$?" in
+   0)
+    echo "Apache Tomcat (pid $PID) is running..."
+    exit 0
+    ;;
+   1)
+    echo "Apache Tomcat is dead but pid file exists..."
+    exit 1
+    ;;
+   3)
+    echo "Apache Tomcat is not running..."
+    exit 0
+    ;;
+  esac
+}
+
+# Parse command line parameters
+case $1 in
+start)
+  start
+  ;;
+stop)
+  stop
+  ;;
+restart)
+  restart
+  ;;
+status)
+  status
+  ;;
+*)
+  # Print help
+  echo "Usage: $0 {start|stop|restart|status}" 1>&2
+  exit 1
+  ;;
+esac
+
+exit 0

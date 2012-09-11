@@ -2,5 +2,5 @@ PKGNAME=faenza-icon-theme
 VERSION=1.2
 LICENSE=GPL-3
 HOMEPAGE=http://tiheum.deviantart.com/art/Faenza-Icons-173323228
-DOWNLOAD="https://launchpad.net/~tiheum/+archive/equinox/+files/faenza-icon-theme_1.2.tar.gz"
+DOWNLOAD=https://launchpad.net/~tiheum/+archive/equinox/+files/faenza-icon-theme_1.2.tar.gz
 MD5SUM=eae3e09a92c4dfd2749b3c46355194fb

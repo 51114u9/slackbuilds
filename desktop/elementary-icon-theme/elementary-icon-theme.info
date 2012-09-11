@@ -1,0 +1,6 @@
+PKGNAME=elementary-icon-theme
+VERSION=2.7.1
+LICENSE=GPL-2
+HOMEPAGE=http://www.elementary-project.com/
+DOWNLOAD="https://launchpad.net/elementaryicons/2.0/2.7.1/+download/elementary-icon-theme-2.7.1.tar.gz"
+MD5SUM=fc4580641089a09cbcf7df38ebddd807

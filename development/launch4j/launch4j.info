@@ -1,0 +1,6 @@
+PKGNAME=launch4j
+VERSION=3.0.2
+LICENSE=BSD
+HOMEPAGE=http://launch4j.sourceforge.net/
+DOWNLOAD=http://downloads.sourceforge.net/launch4j/launch4j-3.0.2-linux.tgz
+MD5SUM=4c6cda3f7e142a070bff865121cb1949

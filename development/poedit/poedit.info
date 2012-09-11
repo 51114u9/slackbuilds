@@ -1,0 +1,6 @@
+PKGNAME=poedit
+VERSION=1.5.2
+LICENSE=MIT
+HOMEPAGE=http://www.poedit.net/
+DOWNLOAD=http://prdownloads.sourceforge.net/poedit/poedit-1.5.2.tar.gz
+MD5SUM=d58ff8b5a821d68258699b2697ec9041

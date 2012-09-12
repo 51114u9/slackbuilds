@@ -1,6 +1,5 @@
 
-# Packages #
-############
+# source files
 *.jar
 *.tar.bz2
 *.tar.gz
@@ -8,3 +7,6 @@
 *.tgz
 *.txz
 *.zip
+
+# except docs
+!*-docs.tar.bz2

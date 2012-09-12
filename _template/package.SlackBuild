@@ -46,6 +46,7 @@ OUTPUT=${OUTPUT:-/tmp}
 SOURCE="$SRCDIR/${PRGNAME}-${VERSION}.tar.xz"
 #SOURCE="$SRCDIR/${PRGNAME}-${VERSION}.tar.bz2"
 #SOURCE="$SRCDIR/${PRGNAME}-${VERSION}.tar.gz"
+#SOURCE="$SRCDIR/${PRGNAME}-${VERSION}.jar"
 SRCURL="$(grep DOWNLOAD ${PRGNAME}.info | cut -d = -f 2)"
 
 ##

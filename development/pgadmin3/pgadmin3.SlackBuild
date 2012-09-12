@@ -1,0 +1,207 @@
+#!/bin/sh
+
+# Copyright 2007-2012 Marco Antonio Frias B., Cochabamba, BO
+# All rights reserved.
+#
+# Redistribution and use of this script, with or without modification, is
+# permitted provided that the following conditions are met:
+#
+# 1. Redistributions of this script must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#
+#  THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED
+#  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+#  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO
+#  EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+#  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+#  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+#  OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+#  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+#  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+#  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+## Name, version and buildtag of the package
+PRGNAME=pgadmin3
+VERSION=1.16.0
+RELEASE=1
+BUILDTAG=mfb
+
+## The documentation files:
+DOCFILES="BUGS CHANGELOG DEVELOPERS INSTALL LICENSE README TODO"
+
+## Where do we look for sources?
+SRCDIR=$(cd $(dirname $0); pwd)
+
+## Place to build (TMP) package (PKG) and output (OUTPUT) the program:
+TMP=${TMP:-/tmp/build}
+PKG=$TMP/package-${PRGNAME}
+OUTPUT=${OUTPUT:-/tmp}
+
+SOURCE="$SRCDIR/${PRGNAME}-${VERSION}.tar.gz"
+SRCURL="$(grep DOWNLOAD ${PRGNAME}.info | cut -d = -f 2)"
+
+##
+## --- with a little luck, you won't have to edit below this point ---
+##
+
+## Automatically determine the architecture we're building on:
+if [ -z "$ARCH" ]; then
+  case "$( uname -m )" in
+    i?86) export ARCH=i486 ;;
+    arm*) export ARCH=arm ;;
+    # Unless $ARCH is already set, use uname -m for all other archs:
+       *) export ARCH=$( uname -m ) ;;
+  esac
+fi
+
+case "$ARCH" in
+  i486)   SLKCFLAGS="-O2 -march=i486 -mtune=i686"
+          SLKLDFLAGS=""; LIBDIRSUFFIX=""
+          ;;
+  x86_64) SLKCFLAGS="-O2 -fPIC"
+          SLKLDFLAGS="-L/usr/lib64"; LIBDIRSUFFIX="64"
+          ;;
+  *)      SLKCFLAGS="-O2"
+          SLKLDFLAGS=""; LIBDIRSUFFIX=""
+          ;;
+esac
+
+## Exit the script on errors:
+set -e
+trap 'echo -e "\n$0 FAILED at line ${LINENO}" | tee $TMP/error-${PRGNAME}.log' ERR
+
+## Catch unitialized variables:
+set -u
+P1=${1:-1}
+
+## Setup the number of jobs (commands) to run simultaneously:
+NUMCPU=$(egrep -c ^cpu[0-9]+ /proc/stat || :)
+
+if [ "$NUMCPU" = "0" ]; then
+  NUMCPU=1
+fi
+
+## Create working directories:
+mkdir -p $OUTPUT             # place for the package to be saved
+mkdir -p $TMP/tmp-${PRGNAME} # location to build the source
+mkdir -p $PKG                # place for the package to be built
+
+rm -rf $PKG/*                # always erase old package's contents
+rm -rf $TMP/tmp-${PRGNAME}/* # remove the remnants of previous build
+rm -rf $TMP/*-${PRGNAME}.log # remove log files
+
+## Source file availability:
+if ! [ -f ${SOURCE} ]; then
+  if ! [ "x${SRCURL}" == "x" ]; then
+    # Check if the $SRCDIR is writable at all - if not, download to $OUTPUT
+    [ -w "$SRCDIR" ] || SOURCE="$OUTPUT/$(basename $SOURCE)"
+    echo -e "\nSource '$(basename ${SOURCE})' not available yet..."
+    echo -e "Will download file to $(dirname $SOURCE)"
+    wget -nv -T 20 -O "${SOURCE}" "${SRCURL}" || true
+    if [ $? -ne 0 -o ! -s "${SOURCE}" ]; then
+      echo -e "Downloading '$(basename ${SOURCE})' failed... aborting the build.\n"
+      mv -f "${SOURCE}" "${SOURCE}".FAIL
+      exit 1
+    fi
+  else
+    echo -e "\nFile '$(basename ${SOURCE})' not available... aborting the build.\n"
+    exit 1
+  fi
+fi
+
+## --- PACKAGE BUILDING ---
+cd $TMP/tmp-${PRGNAME}
+
+echo -e "\nExtracting the source archive(s) for $PRGNAME...\n"
+sleep 1
+
+tar -xzvf ${SOURCE}
+cd ${PRGNAME}-${VERSION}
+find . \( -perm 777 -o -perm 775 -o -perm 711 -o -perm 555 -o -perm 511 \) -exec chmod 755 {} \;
+find . \( -perm 666 -o -perm 664 -o -perm 600 -o -perm 444 -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
+chown -R root.root .
+
+echo -e "\nBuilding $PRGNAME...\n"
+sleep 1
+
+CFLAGS="$SLKCFLAGS" \
+LDFLAGS="$SLKLDFLAGS" \
+CXXFLAGS="$SLKCFLAGS" \
+./configure \
+    --prefix=/usr \
+    --libdir=/usr/lib${LIBDIRSUFFIX} \
+    --localstatedir=/var \
+    --sysconfdir=/etc \
+    --disable-static \
+    --enable-databasedesigner \
+    --program-prefix= \
+    --program-suffix= \
+    --build=$ARCH-slackware-linux \
+    2>&1 | tee $TMP/configure-${PRGNAME}.log
+
+make -j$NUMCPU 2>&1 | tee $TMP/make-${PRGNAME}.log
+
+echo -e "\nInstalling $PRGNAME...\n"
+sleep 1
+
+make DESTDIR=$PKG install 2>&1 | tee $TMP/install-${PRGNAME}.log
+
+## Creating dir structure:
+mkdir -p $PKG/usr/share/applications
+mkdir -p $PKG/usr/share/icons/hicolor/{scalable,16x16,22x22,24x24,32x32,48x48,64x64,128x128}/apps
+
+## Copying files:
+install -m 644 $SRCDIR/pgadmin3.desktop $PKG/usr/share/applications
+install -m 644 $SRCDIR/elephant.svg $PKG/usr/share/icons/hicolor/scalable/apps/pgadmin3.svg
+for i in 16 22 24 32 48 64 128; do
+  ( cd $PKG/usr/share/icons/hicolor/${i}x${i}/apps ; /usr/bin/rsvg-convert -w ${i} -h ${i} -f png -o pgadmin3.png $SRCDIR/elephant.svg )
+done
+
+## Add documentation:
+mkdir -p $PKG/usr/doc/${PRGNAME}-${VERSION}
+cp -pR $DOCFILES $PKG/usr/doc/${PRGNAME}-${VERSION} || true
+find $PKG/usr/doc/${PRGNAME}-${VERSION} -type d -exec chmod 755 {} \;
+find $PKG/usr/doc/${PRGNAME}-${VERSION} -type f -exec chmod 644 {} \;
+chown -R root.root $PKG/usr/doc/${PRGNAME}-${VERSION}
+
+## Strip binaries:
+find $PKG | xargs file | grep -e "executable" -e "shared object" | grep ELF | \
+    cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null
+
+echo -e "\nBuilding package...\n"
+sleep 1
+
+## Add slackbuild files:
+mkdir -p $PKG/usr/src/slackbuilds/${PRGNAME}
+(cd $PKG/usr/src/slackbuilds/${PRGNAME}
+install -m 644 $SRCDIR/ChangeLog .
+install -m 644 $SRCDIR/slack-desc .
+install -m 644 $SRCDIR/doinst.sh .
+install -m 644 $SRCDIR/${PRGNAME}.info .
+install -m 644 $SRCDIR/${PRGNAME}.SlackBuild .
+install -m 644 $SRCDIR/pgadmin3.desktop .
+install -m 644 $SRCDIR/elephant.svg .
+)
+
+## Add a package description:
+mkdir -p $PKG/install
+install -m 644 $SRCDIR/doinst.sh $PKG/install
+install -m 644 $SRCDIR/slack-desc $PKG/install
+
+cat > $OUTPUT/${PRGNAME}-${VERSION}-${ARCH}-${RELEASE}${BUILDTAG}.dep << EOL
+postgresql, wxGTK | wxPython
+EOL
+
+## Build the package:
+cd $PKG
+makepkg \
+    -l y -c n \
+    $OUTPUT/${PRGNAME}-${VERSION}-${ARCH}-${RELEASE}${BUILDTAG}.txz \
+    2>&1 | tee $TMP/makepkg-${PRGNAME}.log
+
+echo -e "Your \"$PRGNAME\" package is complete. It is located in $OUTPUT\n"
+
+if [ "$P1" = "--cleanup" ]; then
+  rm -rf $TMP/tmp-${PRGNAME}
+  rm -rf $PKG
+fi

@@ -1,0 +1,6 @@
+PKGNAME=pgadmin3
+VERSION=1.16.0
+LICENSE=BSD
+HOMEPAGE=http://www.pgadmin.org/
+DOWNLOAD=http://ftp.postgresql.org/pub/pgadmin3/release/v1.16.0/src/pgadmin3-1.16.0.tar.gz
+MD5SUM=30ba5470a625176995a21099a9ae3058

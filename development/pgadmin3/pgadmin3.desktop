@@ -1,0 +1,13 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=pgAdmin III
+GenericName=PostgreSQL Tools
+GenericName[es]=Herramientas para PostgreSQL
+Comment=PostgreSQL Administration Tools
+Comment[es]=Herramienta de Administración para PostgreSQL
+Exec=pgadmin3
+Icon=pgadmin3
+Type=Application
+StartupNotify=true
+Categories=Application;Development;
+Terminal=false

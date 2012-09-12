@@ -1,0 +1,137 @@
+#!/bin/sh
+
+# Copyright 2008-2012 Marco Antonio Frias B., Cochabamba, BO
+# All rights reserved.
+#
+# Redistribution and use of this script, with or without modification, is
+# permitted provided that the following conditions are met:
+#
+# 1. Redistributions of this script must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#
+#  THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED
+#  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+#  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO
+#  EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+#  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+#  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+#  OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+#  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+#  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+#  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+## Name, version and buildtag of the package
+PRGNAME=schemaSpy
+VERSION=5.0.0
+ARCH=noarch
+RELEASE=1
+BUILDTAG=mfb
+
+## Where do we look for sources?
+SRCDIR=$(cd $(dirname $0); pwd)
+
+## Place to build (TMP) package (PKG) and output (OUTPUT) the program:
+TMP=${TMP:-/tmp/build}
+PKG=$TMP/package-${PRGNAME}
+OUTPUT=${OUTPUT:-/tmp}
+
+SOURCE="$SRCDIR/${PRGNAME}_${VERSION}.jar"
+SRCURL="$(grep DOWNLOAD ${PRGNAME}.info | cut -d = -f 2)"
+
+##
+## --- with a little luck, you won't have to edit below this point ---
+##
+
+## Exit the script on errors:
+set -e
+trap 'echo -e "\n$0 FAILED at line ${LINENO}" | tee $TMP/error-${PRGNAME}.log' ERR
+
+## Catch unitialized variables:
+set -u
+P1=${1:-1}
+
+## Create working directories:
+mkdir -p $OUTPUT             # place for the package to be saved
+mkdir -p $PKG                # place for the package to be built
+
+rm -rf $PKG/*                # always erase old package's contents
+
+## Source file availability:
+if ! [ -f ${SOURCE} ]; then
+  if ! [ "x${SRCURL}" == "x" ]; then
+    # Check if the $SRCDIR is writable at all - if not, download to $OUTPUT
+    [ -w "$SRCDIR" ] || SOURCE="$OUTPUT/$(basename $SOURCE)"
+    echo -e "\nSource '$(basename ${SOURCE})' not available yet..."
+    echo -e "Will download file to $(dirname $SOURCE)"
+    wget -nv -T 20 -O "${SOURCE}" "${SRCURL}" || true
+    if [ $? -ne 0 -o ! -s "${SOURCE}" ]; then
+      echo -e "Downloading '$(basename ${SOURCE})' failed... aborting the build.\n"
+      mv -f "${SOURCE}" "${SOURCE}".FAIL
+      exit 1
+    fi
+  else
+    echo -e "\nFile '$(basename ${SOURCE})' not available... aborting the build.\n"
+    exit 1
+  fi
+fi
+
+## --- PACKAGE BUILDING ---
+
+echo -e "\nInstalling $PRGNAME...\n"
+sleep 1
+
+## Creating dir structure:
+mkdir -p $PKG/usr/bin
+mkdir -p $PKG/usr/share/schemaSpy
+
+## Copying files:
+sed "s/@APP@/schemaSpy/g;s/@JARNAME@/${PRGNAME}_${VERSION}/g" $SRCDIR/jlaunch.sh > $PKG/usr/bin/schemaSpy
+chmod 755 $PKG/usr/bin/schemaSpy
+install -m 755 ${PRGNAME}_${VERSION}.jar $PKG/usr/share/schemaSpy
+
+## Add documentation:
+mkdir -p $PKG/usr/doc/${PRGNAME}-${VERSION}
+( cd $PKG/usr/doc/${PRGNAME}-${VERSION} ; tar jxvf $SRCDIR/${PRGNAME}-docs.tar.bz2 )
+find $PKG/usr/doc/${PRGNAME}-${VERSION} -type d -exec chmod 755 {} \;
+find $PKG/usr/doc/${PRGNAME}-${VERSION} -type f -exec chmod 644 {} \;
+chown -R root.root $PKG/usr/doc/${PRGNAME}-${VERSION}
+
+echo -e "\nBuilding package...\n"
+sleep 1
+
+## Add slackbuild files:
+mkdir -p $PKG/usr/src/slackbuilds/${PRGNAME}
+(cd $PKG/usr/src/slackbuilds/${PRGNAME}
+install -m 644 $SRCDIR/ChangeLog .
+install -m 644 $SRCDIR/slack-desc .
+install -m 644 $SRCDIR/${PRGNAME}.info .
+install -m 644 $SRCDIR/${PRGNAME}.SlackBuild .
+install -m 644 $SRCDIR/${PRGNAME}-docs.tar.bz2 .
+install -m 644 $SRCDIR/jlaunch.sh .
+)
+
+## Add a package description:
+mkdir -p $PKG/install
+install -m 644 $SRCDIR/slack-desc $PKG/install
+
+cat > $OUTPUT/${PRGNAME}-${VERSION}-${ARCH}-${RELEASE}${BUILDTAG}.dep << EOL
+jre >= 6 | jdk >= 6
+EOL
+
+cat > $OUTPUT/${PRGNAME}-${VERSION}-${ARCH}-${RELEASE}${BUILDTAG}.sug << EOL
+graphivz
+EOL
+
+## Build the package:
+cd $PKG
+makepkg \
+    -l y -c n \
+    $OUTPUT/${PRGNAME}-${VERSION}-${ARCH}-${RELEASE}${BUILDTAG}.txz \
+    2>&1 | tee $TMP/makepkg-${PRGNAME}.log
+
+echo -e "Your \"$PRGNAME\" package is complete. It is located in $OUTPUT\n"
+
+if [ "$P1" = "--cleanup" ]; then
+  rm -rf $TMP/tmp-${PRGNAME}
+  rm -rf $PKG
+fi

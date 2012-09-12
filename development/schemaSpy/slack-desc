@@ -1,0 +1,19 @@
+# HOW TO EDIT THIS FILE:
+# The "handy ruler" below makes it easier to edit a package description.  Line
+# up the first '|' above the ':' following the base package name, and the '|'
+# on the right side marks the last column you can put a character in.  You must
+# make exactly 11 lines for the formatting to be correct.  It's also
+# customary to leave one space after the ':'.
+
+         |-----handy-ruler------------------------------------------------------|
+schemaSpy: schemaSpy (Graphical Database Schema Metadata Browser)
+schemaSpy:
+schemaSpy: SchemaSpy is a Java-based tool that analyzes the metadata of a schema
+schemaSpy: in a database and generates a visual representation of it in a
+schemaSpy: browser-displayable format. SchemaSpy uses the dot executable from
+schemaSpy: Graphviz (optional) to generate graphical representations of the
+schemaSpy: table/view relationships.
+schemaSpy:
+schemaSpy: More information at: http://schemaspy.sourceforge.net/
+schemaSpy:
+schemaSpy: Packaged by Marco Antonio Frias B. (marcoantoniofrias@gmail.com)

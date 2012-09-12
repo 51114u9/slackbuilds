@@ -1,0 +1,13 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Eclipse SDK IDE
+GenericName=Open Source IDE
+GenericName[es]=IDE de código abierto
+Comment=Open Source Integrated Development Environment
+Comment[es]=Entorno de desarrollo integrado de código abierto
+Exec=eclipse-SDK
+Icon=eclipse-SDK
+StartupNotify=true
+Type=Application
+Categories=Qt;KDE;GNOME;Application;Development;
+Terminal=false

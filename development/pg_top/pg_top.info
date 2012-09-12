@@ -1,0 +1,6 @@
+PKGNAME=pg_top
+VERSION=3.6.2
+LICENSE=BSD
+HOMEPAGE=http://ptop.projects.postgresql.org/
+DOWNLOAD=http://pgfoundry.org/frs/download.php/1780/pg_top-3.6.2.tar.bz2
+MD5SUM=f1d7a895c4afc50a1ec05682c1f8344c

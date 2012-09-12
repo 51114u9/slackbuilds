@@ -1,0 +1,6 @@
+PKGNAME=postgresql
+VERSION=9.1.5
+LICENSE=BSD
+HOMEPAGE=http://www.postgresql.org/
+DOWNLOAD=http://ftp.postgresql.org/pub/source/v9.1.5/postgresql-9.1.5.tar.bz2
+MD5SUM=c784decb60615aa94c6a31601bc6ffd2

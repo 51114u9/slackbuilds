@@ -1,0 +1,308 @@
+#!/bin/sh
+
+# Copyright 2007-2012 Marco Antonio Frias B., Cochabamba, BO
+# All rights reserved.
+#
+# Redistribution and use of this script, with or without modification, is
+# permitted provided that the following conditions are met:
+#
+# 1. Redistributions of this script must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#
+#  THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED
+#  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+#  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO
+#  EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+#  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+#  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+#  OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+#  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+#  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+#  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+
+## Name, version and buildtag of the package
+PRGNAME=postgresql
+VERSION=9.1.5
+RELEASE=1
+BUILDTAG=mfb
+
+## The documentation files:
+DOCFILES="doc/bug.template COPYRIGHT HISTORY INSTALL README"
+
+## Where do we look for sources?
+SRCDIR=$(cd $(dirname $0); pwd)
+
+## Place to build (TMP) package (PKG) and output (OUTPUT) the program:
+TMP=${TMP:-/tmp/build}
+PKG=$TMP/package-${PRGNAME}
+OUTPUT=${OUTPUT:-/tmp}
+
+SOURCE="$SRCDIR/${PRGNAME}-${VERSION}.tar.bz2"
+SRCURL="$(grep DOWNLOAD ${PRGNAME}.info | cut -d = -f 2)"
+
+##
+## --- with a little luck, you won't have to edit below this point ---
+##
+
+## Automatically determine the architecture we're building on:
+if [ -z "$ARCH" ]; then
+  case "$( uname -m )" in
+    i?86) export ARCH=i486 ;;
+    arm*) export ARCH=arm ;;
+    # Unless $ARCH is already set, use uname -m for all other archs:
+       *) export ARCH=$( uname -m ) ;;
+  esac
+fi
+
+case "$ARCH" in
+  i486)   SLKCFLAGS="-O2 -march=i486 -mtune=i686"
+          SLKLDFLAGS=""; LIBDIRSUFFIX=""
+          ;;
+  x86_64) SLKCFLAGS="-O2 -fPIC"
+          SLKLDFLAGS="-L/usr/lib64"; LIBDIRSUFFIX="64"
+          ;;
+  *)      SLKCFLAGS="-O2"
+          SLKLDFLAGS=""; LIBDIRSUFFIX=""
+          ;;
+esac
+
+## Exit the script on errors:
+set -e
+trap 'echo -e "\n$0 FAILED at line ${LINENO}" | tee $TMP/error-${PRGNAME}.log' ERR
+
+## Catch unitialized variables:
+set -u
+P1=${1:-1}
+
+## Setup the number of jobs (commands) to run simultaneously:
+NUMCPU=$(egrep -c ^cpu[0-9]+ /proc/stat || :)
+
+if [ "$NUMCPU" = "0" ]; then
+  NUMCPU=1
+fi
+
+## Create working directories:
+mkdir -p $OUTPUT             # place for the package to be saved
+mkdir -p $TMP/tmp-${PRGNAME} # location to build the source
+mkdir -p $PKG                # place for the package to be built
+
+rm -rf $PKG/*                # always erase old package's contents
+rm -rf $TMP/tmp-${PRGNAME}/* # remove the remnants of previous build
+rm -rf $TMP/*-${PRGNAME}.log # remove log files
+
+## Source file availability:
+if ! [ -f ${SOURCE} ]; then
+  if ! [ "x${SRCURL}" == "x" ]; then
+    # Check if the $SRCDIR is writable at all - if not, download to $OUTPUT
+    [ -w "$SRCDIR" ] || SOURCE="$OUTPUT/$(basename $SOURCE)"
+    echo -e "\nSource '$(basename ${SOURCE})' not available yet..."
+    echo -e "Will download file to $(dirname $SOURCE)"
+    wget -nv -T 20 -O "${SOURCE}" "${SRCURL}" || true
+    if [ $? -ne 0 -o ! -s "${SOURCE}" ]; then
+      echo -e "Downloading '$(basename ${SOURCE})' failed... aborting the build.\n"
+      mv -f "${SOURCE}" "${SOURCE}".FAIL
+      exit 1
+    fi
+  else
+    echo -e "\nFile '$(basename ${SOURCE})' not available... aborting the build.\n"
+    exit 1
+  fi
+fi
+
+## --- PACKAGE BUILDING ---
+cd $TMP/tmp-${PRGNAME}
+
+echo -e "\nExtracting the source archive(s) for $PRGNAME...\n"
+sleep 1
+
+tar -xjvf ${SOURCE}
+cd ${PRGNAME}-${VERSION}
+find . \( -perm 777 -o -perm 775 -o -perm 711 -o -perm 555 -o -perm 511 \) -exec chmod 755 {} \;
+find . \( -perm 666 -o -perm 664 -o -perm 600 -o -perm 444 -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
+chown -R root.root .
+
+echo -e "\nBuilding $PRGNAME...\n"
+sleep 1
+
+CFLAGS="$SLKCFLAGS" \
+LDFLAGS="$SLKLDFLAGS" \
+./configure \
+    --prefix=/usr \
+    --libdir=/usr/lib${LIBDIRSUFFIX} \
+    --localstatedir=/var \
+    --sysconfdir=/etc \
+    --mandir=/usr/man \
+    --docdir=/usr/doc/${PRGNAME}-${VERSION} \
+    --enable-nls \
+    --with-tcl \
+    --with-perl \
+    --with-python \
+    --with-ldap \
+    --with-openssl \
+    --with-libxml \
+    --with-libxslt \
+    --build=$ARCH-slackware-linux \
+    2>&1 | tee $TMP/configure-${PRGNAME}.log
+
+make -j$NUMCPU 2>&1 | tee $TMP/make-${PRGNAME}.log
+
+echo -e "\nInstalling $PRGNAME...\n"
+sleep 1
+
+make DESTDIR=$PKG install 2>&1 | tee $TMP/install-${PRGNAME}.log
+make DESTDIR=$PKG \
+    -C doc/src/sgml install-man install-html \
+    2>&1 | tee -a $TMP/install-${PRGNAME}.log
+
+## Creating dir structure:
+mkdir -p $PKG/etc/rc.d
+
+## Copying files:
+install -m 644 $SRCDIR/rc.postgresql.new $PKG/etc/rc.d
+chown -R root.root $PKG/etc/rc.d
+
+## Add documentation:
+mkdir -p $PKG/usr/doc/${PRGNAME}-${VERSION}
+cp -pR $DOCFILES $PKG/usr/doc/${PRGNAME}-${VERSION} || true
+find $PKG/usr/doc/${PRGNAME}-${VERSION} -type d -exec chmod 755 {} \;
+find $PKG/usr/doc/${PRGNAME}-${VERSION} -type f -exec chmod 644 {} \;
+chown -R root.root $PKG/usr/doc/${PRGNAME}-${VERSION}
+
+## Compress the man page(s):
+if [ -d $PKG/usr/man ]; then
+  find $PKG/usr/man -type f -name "*.?" -exec gzip -9f {} \;
+  find $PKG/usr/man -type f -not -name "*.gz" -exec gzip -9f {} \;
+  for i in $(find $PKG/usr/man -type l -name "*.?") ; do ln -s $( readlink $i ).gz $i.gz ; rm $i ; done
+fi
+
+# Strip binaries:
+find $PKG | xargs file | grep -e "executable" -e "shared object" | grep ELF | \
+    cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null
+
+echo -e "\nBuilding package...\n"
+sleep 1
+
+## Add slackbuild files:
+mkdir -p $PKG/usr/src/slackbuilds/${PRGNAME}
+(cd $PKG/usr/src/slackbuilds/${PRGNAME}
+install -m 644 $SRCDIR/ChangeLog .
+install -m 644 $SRCDIR/slack-desc .
+install -m 644 $SRCDIR/doinst.sh .
+install -m 644 $SRCDIR/${PRGNAME}.info .
+install -m 644 $SRCDIR/${PRGNAME}.SlackBuild .
+install -m 644 $SRCDIR/rc.postgresql.new .
+)
+
+## Add a package description:
+mkdir -p $PKG/install
+install -m 644 $SRCDIR/doinst.sh $PKG/install
+install -m 644 $SRCDIR/slack-desc $PKG/install
+
+## Build the package:
+cd $PKG
+makepkg \
+    -l y -c n \
+    $OUTPUT/${PRGNAME}-${VERSION}-${ARCH}-${RELEASE}${BUILDTAG}.txz \
+    2>&1 | tee $TMP/makepkg-${PRGNAME}.log
+
+# -----------------------------------------------------------------------------
+#
+# PACKAGE FOR POSTGRESQL CONTRIB
+#
+
+DOCFILES="contrib/README COPYRIGHT HISTORY INSTALL"
+
+PKG=$TMP/package-${PRGNAME}-contrib
+
+## Create working directories:
+mkdir -p $PKG                        # place for the package to be built
+
+rm -rf $PKG/*                        # always erase old package's contents
+rm -rf $TMP/*-${PRGNAME}-contrib.log # remove log files
+
+## --- PACKAGE BUILDING ---
+cd $TMP/tmp-${PRGNAME}/${PRGNAME}-${VERSION}
+
+echo -e "\nBuilding contrib of $PRGNAME...\n"
+sleep 1
+
+(cd contrib
+
+make -j$NUMCPU 2>&1 | tee $TMP/make-${PRGNAME}-contrib.log
+
+echo -e "\nInstalling contrib of $PRGNAME...\n"
+sleep 1
+
+make DESTDIR=$PKG install 2>&1 | tee $TMP/install-${PRGNAME}-contrib.log
+)
+
+## Add documentation:
+mv $PKG/usr/doc/${PRGNAME}-${VERSION} $PKG/usr/doc/${PRGNAME}-contrib-${VERSION}
+cp -pR $DOCFILES $PKG/usr/doc/${PRGNAME}-contrib-${VERSION} || true
+find $PKG/usr/doc/${PRGNAME}-contrib-${VERSION} -type d -exec chmod 755 {} \;
+find $PKG/usr/doc/${PRGNAME}-contrib-${VERSION} -type f -exec chmod 644 {} \;
+chown -R root.root $PKG/usr/doc/${PRGNAME}-contrib-${VERSION}
+
+## Strip binaries:
+find $PKG | xargs file | grep -e "executable" -e "shared object" | grep ELF | \
+    cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null
+
+echo -e "\nBuilding package...\n"
+sleep 1
+
+## Add slackbuild files:
+mkdir -p $PKG/usr/src/slackbuilds/${PRGNAME}-contrib
+(cd $PKG/usr/src/slackbuilds/${PRGNAME}-contrib
+install -m 644 $SRCDIR/ChangeLog .
+install -m 644 $SRCDIR/slack-desc .
+install -m 644 $SRCDIR/doinst.sh .
+install -m 644 $SRCDIR/${PRGNAME}.info .
+install -m 644 $SRCDIR/${PRGNAME}.SlackBuild .
+install -m 644 $SRCDIR/rc.postgresql.new .
+)
+
+## Add a package description:
+mkdir -p $PKG/install
+
+cat > $PKG/install/slack-desc << EOL
+# HOW TO EDIT THIS FILE:
+# The "handy ruler" below makes it easier to edit a package description.  Line
+# up the first '|' above the ':' following the base package name, and the '|'
+# on the right side marks the last column you can put a character in.  You must
+# make exactly 11 lines for the formatting to be correct.  It's also
+# customary to leave one space after the ':'.
+
+                  |-----handy-ruler------------------------------------------------------|
+${PRGNAME}-contrib: ${PRGNAME}-contrib (PostgreSQL Contrib Tree)
+${PRGNAME}-contrib:
+${PRGNAME}-contrib: This subtree contains porting tools, analysis utilities, and plug-in
+${PRGNAME}-contrib: features that are not part of the core PostgreSQL system, mainly
+${PRGNAME}-contrib: because they address a limited audience or are too experimental to be
+${PRGNAME}-contrib: part of the main source tree. This does not preclude their
+${PRGNAME}-contrib: usefulness.
+${PRGNAME}-contrib:
+${PRGNAME}-contrib: More information at: http://www.postgresql.org/
+${PRGNAME}-contrib:
+${PRGNAME}-contrib: Packaged by Marco Antonio Frias B. (marcoantoniofrias@gmail.com)
+
+EOL
+
+cat > $OUTPUT/${PRGNAME}-contrib-${VERSION}-${ARCH}-${RELEASE}${BUILDTAG}.dep << EOL
+${PRGNAME} >= ${VERSION}
+EOL
+
+## Build the package:
+cd $PKG
+makepkg \
+    -l y -c n \
+    $OUTPUT/${PRGNAME}-contrib-${VERSION}-${ARCH}-${RELEASE}${BUILDTAG}.txz \
+    2>&1 | tee $TMP/makepkg-${PRGNAME}-contrib.log
+
+echo -e "Your \"$PRGNAME\" and \"${PRGNAME}-contrib\" package is complete. It is located in $OUTPUT\n"
+
+if [ "$P1" = "--cleanup" ]; then
+  rm -rf $TMP/package-${PRGNAME}
+  rm -rf $TMP/package-${PRGNAME}-contrib
+  rm -rf $TMP/tmp-${PRGNAME}
+fi

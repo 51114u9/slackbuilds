@@ -1,0 +1,182 @@
+#!/bin/sh
+
+# Copyright 2004      Ryan Kirkpatrick <pgsql@rkirkpat.net>
+# Copyright 2006      Ken Zalewski <kennyz@nycap.rr.com>
+# Copyright 2010-2012 Marco Antonio Frias B., Cochabamba, BO
+# All rights reserved.
+#
+# Redistribution and use of this script, with or without modification, is
+# permitted provided that the following conditions are met:
+#
+# 1. Redistributions of this script must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#
+#  THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED
+#  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+#  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO
+#  EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+#  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+#  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+#  OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+#  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+#  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+#  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+# NOTE:
+#
+# This script can be run directly from a root command shell, using:
+#
+#  # /etc/rc.d/rc.postgresql start   <- a new server is launched
+#  # /etc/rc.d/rc.postgresql stop    <- the server is shut down
+#  # /etc/rc.d/rc.postgresql restart <- executes a stop followed by a start
+#  # /etc/rc.d/rc.postgresql reload  <- reread config files
+#  # /etc/rc.d/rc.postgresql status  <- checks whether a server is running
+#
+# For automatic startup, it should be added in /etc/rc.d/rc.local:
+#
+# if [ -x /etc/rc.d/rc.postgresql ]; then
+#   /etc/rc.d/rc.postgresql start
+# fi
+#
+# For automatic shut down, it should be added in /etc/rc.d/rc.local_shutdown:
+#
+# if [ -x /etc/rc.d/rc.postgresql ]; then
+#   /etc/rc.d/rc.postgresql stop
+# fi
+#
+
+##################
+## EDIT FROM HERE
+##################
+
+# "postgres" home directory
+PGDIR="/var/lib/pgsql"
+
+# Data directory
+PGDATA="$PGDIR/data"
+
+# Who to run the postmaster as, usually "postgres" (NOT "root")
+PGUSER=postgres
+PGUID=28
+PGGID=28
+
+# Where to keep a log file
+PGLOG="$PGDIR/serverlog"
+
+#####################
+## STOP EDITING HERE
+#####################
+
+# The path that is to be used for the script
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+# What to user to create database cluster
+PGINITDB="/usr/bin/initdb"
+
+# What to use to start up the postmaster
+DAEMON="/usr/bin/postmaster"
+
+# What to use to shut down the postmaster
+PGCTL="/usr/bin/pg_ctl"
+
+check_env() {
+
+  # Only start if we can find the postmaster
+  if [ ! -x $DAEMON ]; then
+    echo "PostgreSQL is not installed correctly." >&2
+    exit 1
+  fi
+
+  # Confirm that the postgres user and group exist
+  grep -q "^$PGUSER:" /etc/group || groupadd -g $PGGID $PGUSER || exit 1
+  grep -q "^$PGUSER:" /etc/passwd || useradd -d $PGDIR -c "PostgreSQL" -g $PGUSER -u $PGUID $PGUSER || exit 1
+
+  # Confirm that the postgres home directory ($PGDIR) exists
+  if [ ! -d $PGDIR/ ]; then
+    echo -n "Creating PGDIR $PGDIR: "
+    mkdir $PGDIR && echo "ok" || exit 1
+  fi
+  chown $PGUSER:$PGUSER $PGDIR/
+  chmod 750 $PGDIR/
+
+  # Check for a valid startup log file
+  if [ ! -e "$PGLOG" ]; then
+    touch "$PGLOG" || exit 1
+  fi
+  chown $PGUSER:$PGUSER "$PGLOG"
+  chmod 700 "$PGLOG"
+  
+  # Check for a valid data ($PGDATA) directory
+  if [ ! -f "$PGDATA/PG_VERSION" -o ! -d "$PGDATA/base" ]; then
+
+    echo -n "Initializing a new PostgreSQL database cluster: "
+    if [ ! -e "$PGDATA" ]; then
+      mkdir -p "$PGDATA" || exit 1
+    fi
+    chown $PGUSER:$PGUSER "$PGDATA"
+    chmod 700 "$PGDATA"
+
+    su - $PGUSER -c "$PGINITDB --pgdata='$PGDATA'" >>$PGLOG 2>&1
+    if [ -f "$PGDATA/PG_VERSION" ]; then
+      echo "ok"
+    else
+      echo "failed"
+      exit 1
+    fi
+  fi
+}
+
+start() {
+  check_env
+  echo -n "Starting PostgreSQL Server: "
+  su - $PGUSER -c "$DAEMON -D '$PGDATA' &" >>$PGLOG 2>&1
+  [ $? -eq 0 ] && echo "ok" || echo "failed"
+}
+
+stop() {
+  echo -n "Stopping PostgreSQL Server: "
+  su - $PGUSER -c "$PGCTL stop -D '$PGDATA' -s -m fast" >>$PGLOG 2>&1
+  [ $? -eq 0 ] && echo "ok" || echo "failed"
+}
+
+restart() {
+  stop
+  sleep 1
+  start
+}
+
+reload() {
+  echo -n "Reload PostgreSQL Server: "
+  su - $PGUSER -c "$PGCTL reload -D '$PGDATA' -s"
+  [ $? -eq 0 ] && echo "ok" || echo "failed"
+}
+
+status() {
+  su - $PGUSER -c "$PGCTL status -D '$PGDATA'"
+}
+
+# Parse command line parameters
+case $1 in
+start)
+  start
+  ;;
+stop)
+  stop
+  ;;
+restart)
+  restart
+  ;;
+reload)
+  reload
+  ;;
+status)
+  status
+  ;;
+*)
+  # Print help
+  echo "Usage: $0 {start|stop|restart|reload|status}" 1>&2
+  exit 1
+  ;;
+esac
+
+exit 0

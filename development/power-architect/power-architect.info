@@ -1,0 +1,6 @@
+PKGNAME=power-architect
+VERSION=1.0.6
+LICENSE=GPL-3
+HOMEPAGE=http://code.google.com/p/power-architect/
+DOWNLOAD=http://power-architect.googlecode.com/files/SQL-Power-Architect-generic-jdbc-1.0.6.tar.gz
+MD5SUM=d4387d285b3bd1ea35082a2e353f688e

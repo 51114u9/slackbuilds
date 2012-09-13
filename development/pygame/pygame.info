@@ -1,0 +1,6 @@
+PKGNAME=pygame
+VERSION=1.9.1
+LICENSE=LGPL-2.1
+HOMEPAGE=http://www.pygame.org/
+DOWNLOAD=http://www.pygame.org/ftp/pygame-1.9.1release.tar.gz
+MD5SUM=1c4cdc708d17c8250a2d78ef997222fc

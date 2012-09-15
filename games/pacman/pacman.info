@@ -1,0 +1,6 @@
+PKGNAME=pacman
+VERSION=0.1
+LICENSE=NONE
+HOMEPAGE=http://pinproject.com/pacman/pacman.htm
+DOWNLOAD=http://pinproject.com/pacman/pacman-large.zip
+MD5SUM=4f5b19ebc74688f6242df8a8f5a4cc04

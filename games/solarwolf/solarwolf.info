@@ -1,0 +1,6 @@
+PKGNAME=solarwolf
+VERSION=1.5
+LICENSE=LGPL-2.1
+HOMEPAGE=http://www.pygame.org/shredwheat/solarwolf/
+DOWNLOAD=http://www.pygame.org/shredwheat/solarwolf/solarwolf-1.5.tar.gz
+MD5SUM=52fbed0a33c3c4c08d9dc0e533f90f8c

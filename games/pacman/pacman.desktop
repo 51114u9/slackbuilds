@@ -1,0 +1,11 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=PacMan
+Comment=Arcade Clone Game of Pac-Man
+Comment[es]=Clon del juego arcade Pac-Man
+Exec=pacman
+Icon=pacman
+StartupNotify=true
+Type=Application
+Categories=Application;Game;ArcadeGame;
+Terminal=false

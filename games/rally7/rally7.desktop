@@ -1,0 +1,11 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Rally 7
+Comment=A classic rally driving game
+Comment[es]=Un clásico juego de conducción rally
+Exec=rally7
+Icon=rally7
+StartupNotify=true
+Type=Application
+Categories=Application;Game;ArcadeGame;
+Terminal=false

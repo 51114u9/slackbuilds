@@ -1,0 +1,11 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=SolarWolf
+Comment=SolarFox-like Game
+Comment[es]=Juego similar a SolarFox
+Exec=solarwolf
+Icon=solarwolf
+StartupNotify=true
+Type=Application
+Categories=Application;Game;ArcadeGame;
+Terminal=false

@@ -195,20 +195,23 @@ python setup.py install --root=$PKG 2>&1 | tee $TMP/install-${PRGNAME}.log
 ## Creating dir structure:
 mkdir -p $PKG/usr/bin
 mkdir -p $PKG/usr/share/PROGRAM
-mkdir -p $PKG/usr/share/applications
-mkdir -p $PKG/usr/share/pixmaps
-mkdir -p $PKG/usr/share/icons/hicolor/{scalable,16x16,22x22,24x24,32x32,48x48}/apps
+mkdir -p $PKG/usr/share/{applications,pixmaps}
+mkdir -p $PKG/usr/share/icons/hicolor/{scalable,16x16,22x22,24x24,32x32,48x48,64x64,128x128}/apps
 
 ## Copying files:
 sed "s/@APP@/PROGRAM/g;s/@JARNAME@/PROGRAM/g" $SRCDIR/jlaunch.sh > $PKG/usr/bin/PROGRAM
+sed "s/@APP@/PROGRAM/g;s/@PYTHONNAME@/PROGRAM/g" $SRCDIR/pylaunch.sh > $PKG/usr/bin/PROGRAM
 chmod 755 $PKG/usr/bin/PROGRAM
 install -m 755 PROGRAM.jar $PKG/usr/share/PROGRAM
+install -m 755 PROGRAM.py $PKG/usr/share/PROGRAM
 install -m 644 $SRCDIR/PROGRAM.desktop $PKG/usr/share/applications
 install -m 644 $SRCDIR/PROGRAM.png $PKG/usr/share/pixmaps
-
 install -m 644 $SRCDIR/PROGRAM.svg $PKG/usr/share/icons/hicolor/scalable/apps
-for i in 16 22 24 32 48; do
+for i in 16 22 24 32 48 64 128; do
   install -m 644 $SRCDIR/PROGRAM.png $PKG/usr/share/icons/hicolor/${i}x${i}/apps
+done
+for i in 16 22 24 32 48 64 128; do
+  ( cd $PKG/usr/share/icons/hicolor/${i}x${i}/apps ; /usr/bin/rsvg-convert -w ${i} -h ${i} -f png -o PROGRAM.png $SRCDIR/PROGRAM.svg )
 done
 
 ## Remove files:
@@ -255,6 +258,7 @@ install -m 644 $SRCDIR/${PRGNAME}.SlackBuild .
 install -m 644 $SRCDIR/PROGRAM.desktop .
 install -m 644 $SRCDIR/rc.PROGRAM .
 install -m 644 $SRCDIR/jlaunch.sh .
+install -m 644 $SRCDIR/pylaunch.sh .
 )
 
 ## Add a package description:

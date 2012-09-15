@@ -1,0 +1,6 @@
+PKGNAME=translate-toolkit
+VERSION=1.9.0
+LICENSE=GPL-2
+HOMEPAGE=http://translate.sourceforge.net/wiki/toolkit/index
+DOWNLOAD=http://downloads.sourceforge.net/project/translate/translate-toolkit-1.9.0.tar.bz2
+MD5SUM=6106bb27887a77c056bfa7d2fd89204d

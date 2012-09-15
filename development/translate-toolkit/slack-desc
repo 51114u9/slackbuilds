@@ -1,0 +1,19 @@
+# HOW TO EDIT THIS FILE:
+# The "handy ruler" below makes it easier to edit a package description.  Line
+# up the first '|' above the ':' following the base package name, and the '|'
+# on the right side marks the last column you can put a character in.  You must
+# make exactly 11 lines for the formatting to be correct.  It's also
+# customary to leave one space after the ':'.
+
+                 |-----handy-ruler------------------------------------------------------|
+translate-toolkit: translate-toolkit (Toolkit to convert between translation formats)
+translate-toolkit:
+translate-toolkit: The Translate Toolkit is a collection of useful tools for localisa-
+translate-toolkit: tion, and a powerful API for programmers of localisation tools. It
+translate-toolkit: is designed by localisers for localisers. Its aim is to make your
+translate-toolkit: localisation easier and of higher quality.
+translate-toolkit:
+translate-toolkit: More information at:
+translate-toolkit: http://translate.sourceforge.net/wiki/toolkit/index
+translate-toolkit:
+translate-toolkit: Packaged by Marco Antonio Frias B. (marcoantoniofrias@gmail.com)

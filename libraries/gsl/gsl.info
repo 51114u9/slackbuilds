@@ -1,0 +1,6 @@
+PKGNAME=gsl
+VERSION=1.15
+LICENSE=GPL-3
+HOMEPAGE=http://www.gnu.org/software/gsl/
+DOWNLOAD=ftp://ftp.gnu.org/gnu/gsl/gsl-1.15.tar.gz
+MD5SUM=494ffefd90eef4ada678c306bab4030b

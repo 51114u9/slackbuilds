@@ -1,0 +1,6 @@
+PKGNAME=lxml
+VERSION=2.3.5
+LICESNE=BSD_MIT
+HOMEPAGE=http://lxml.de/
+DOWNLOAD=http://lxml.de/files/lxml-2.3.5.tgz
+MD5SUM=d03fb3b9139df7f182afffe72f412c87

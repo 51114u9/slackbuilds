@@ -1,0 +1,6 @@
+PKGNAME=libsigc++
+VERSION=2.2.10
+LICENSE=LGPL-2.1
+HOMEPAGE=http://libsigc.sourceforge.net/
+DOWNLOAD=http://ftp.gnome.org/pub/GNOME/sources/libsigc++/2.2/libsigc++-2.2.10.tar.bz2
+MD5SUM=6d350ae0bc17b8915a06ce6b7e4240e8

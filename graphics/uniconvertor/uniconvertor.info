@@ -1,0 +1,6 @@
+PKGNAME=uniconvertor
+VERSION=1.1.5
+LICENSE=LGPL-2_GPL-2
+HOMEPAGE=http://sk1project.org/modules.php?name=Products&product=uniconvertor
+DOWNLOAD=http://sk1project.org/dc.php?target=uniconvertor-1.1.5.tar.gz
+MD5SUM=d1272315a58304ece2ff588834e23f72

@@ -189,7 +189,7 @@ atkmm, cairomm, gc, glibmm, gsl, gtkmm, libsigc++, pangomm
 EOL
 
 cat > $OUTPUT/${PRGNAME}-${VERSION}-${ARCH}-${RELEASE}${BUILDTAG}.sug << EOL
-lxml, libwpg, numpy
+libwpg, lxml, numpy, perl-xml-xql, uniconvertor
 EOL
 
 ## Build the package:

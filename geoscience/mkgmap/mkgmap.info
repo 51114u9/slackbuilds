@@ -1,0 +1,6 @@
+PKGNAME=mkgmap
+VERSION=r2337
+LICENSE=GPL-2
+HOMEPAGE=http://www.mkgmap.org.uk/
+DOWNLOAD=http://www.mkgmap.org.uk/snapshots/mkgmap-r2337.tar.gz
+MD5SUM=c32bf5a13617c85167a4136a840186a9

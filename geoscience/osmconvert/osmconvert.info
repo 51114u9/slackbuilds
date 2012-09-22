@@ -1,0 +1,6 @@
+PKGNAME=osmconvert
+VERSION=0.7F
+LICENSE=AGPL-3
+HOMEPAGE=http://wiki.openstreetmap.org/wiki/Osmconvert
+DOWNLOAD=http://m.m.i24.cc/osmconvert.c
+MD5SUM=7ef25764987e927de1db519281cd7788

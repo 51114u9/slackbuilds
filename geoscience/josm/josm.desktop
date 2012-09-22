@@ -1,0 +1,11 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Java OpenStreetMap Editor
+Comment=Java OpenStreetMap Editor
+Comment[es]=Editor para OpenStreetMap escrito en Java
+Exec=josm
+Icon=josm
+StartupNotify=true
+Type=Application
+Categories=Graphics;Science;Geoscience;Geography;
+Terminal=false

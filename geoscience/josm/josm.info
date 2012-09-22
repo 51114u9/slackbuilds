@@ -1,0 +1,6 @@
+PKGNAME=josm
+VERSION=r5515
+LICENSE=GPL-3
+HOMEPAGE=http://josm.openstreetmap.de/
+DOWNLOAD=http://josm.openstreetmap.de/download/josm-snapshot-5515.jar
+MD5SUM=9cf1cce716d3208c21cad1b2266ac056

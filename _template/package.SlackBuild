@@ -255,6 +255,7 @@ install -m 644 $SRCDIR/doinst.sh .
 install -m 644 $SRCDIR/${PRGNAME}.info .
 install -m 644 $SRCDIR/${PRGNAME}_*.patch .
 install -m 644 $SRCDIR/${PRGNAME}.SlackBuild .
+install -m 644 $SRCDIR/${PRGNAME}-docs.tar.bz2 .
 install -m 644 $SRCDIR/PROGRAM.desktop .
 install -m 644 $SRCDIR/rc.PROGRAM .
 install -m 644 $SRCDIR/jlaunch.sh .

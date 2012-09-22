@@ -1,0 +1,19 @@
+# HOW TO EDIT THIS FILE:
+# The "handy ruler" below makes it easier to edit a package description.  Line
+# up the first '|' above the ':' following the base package name, and the '|'
+# on the right side marks the last column you can put a character in.  You must
+# make exactly 11 lines for the formatting to be correct.  It's also
+# customary to leave one space after the ':'.
+
+         |-----handy-ruler------------------------------------------------------|
+osmfilter: osmfilter (OpenStreetMap file filter)
+osmfilter:
+osmfilter: osmfilter is used to filter OpenStreetMap data files for specific
+osmfilter: tags. You can define different kinds of filters to get OSM objects
+osmfilter: (i.e. nodes, ways, relations), including their dependent objects,
+osmfilter: e.g. nodes of ways, ways of relations, relations of other relations.
+osmfilter:
+osmfilter:
+osmfilter: More information at: http://wiki.openstreetmap.org/wiki/Osmfilter
+osmfilter:
+osmfilter: Packaged by Marco Antonio Frias B. (marcoantoniofrias@gmail.com)

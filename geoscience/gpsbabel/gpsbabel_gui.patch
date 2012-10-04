@@ -1,0 +1,26 @@
+diff -Nru gpsbabel-1.4.4.orig/gui/app.pro gpsbabel-1.4.4/gui/app.pro
+--- gpsbabel-1.4.4.orig/gui/app.pro	2012-08-26 22:03:12.000000000 -0400
++++ gpsbabel-1.4.4/gui/app.pro	2012-10-03 21:48:10.094000259 -0400
+@@ -31,7 +31,7 @@
+   TARGET=GPSBabelFE
+   QMAKE_LFLAGS_RELEASE += -static-libgcc
+ }
+-unix:TARGET=gpsbabelfe-bin
++unix:TARGET=gpsbabelfe
+ mac:TARGET=GPSBabelFE
+ 
+ FORMS += aboutui.ui
+diff -Nru gpsbabel-1.4.4.orig/gui/gpsbabel.desktop gpsbabel-1.4.4/gui/gpsbabel.desktop
+--- gpsbabel-1.4.4.orig/gui/gpsbabel.desktop	2011-10-19 12:18:42.000000000 -0400
++++ gpsbabel-1.4.4/gui/gpsbabel.desktop	2012-10-03 21:47:44.275000261 -0400
+@@ -2,8 +2,9 @@
+ Type=Application
+ Name=GPSBabel
+ Comment=Qt GUI interface for GPSBabel
++Comment[es]=Interfaz gráfica Qt para GPSBabel
+ GenericName=GPSBabel
+ Icon=gpsbabel
+-Exec=gpsbabelfe-bin
++Exec=gpsbabelfe
+ Terminal=false
+ Categories=Geography;Education;Utility;

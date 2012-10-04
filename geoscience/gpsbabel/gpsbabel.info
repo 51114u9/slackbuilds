@@ -1,0 +1,6 @@
+PKGNAME=gpsbabel
+VERSION=1.4.4
+LICENSE=GPL-2
+HOMEPAGE=http://www.gpsbabel.org/
+DOWNLOAD=http://www.gpsbabel.org/download.html
+MD5SUM=

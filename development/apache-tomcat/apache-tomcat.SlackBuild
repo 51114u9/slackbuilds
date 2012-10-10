@@ -29,7 +29,7 @@ USE_EXAMPLES=${USE_EXAMPLES:-"YES"}
 
 ## Name, version and buildtag of the package
 PRGNAME=apache-tomcat
-VERSION=7.0.30
+VERSION=7.0.32
 ARCH=noarch
 RELEASE=1
 BUILDTAG=mfb
@@ -110,15 +110,13 @@ sleep 1
 
 ## Removing unnecessary (windows and compress) files:
 rm -rf bin/*.{bat,gz}
+rm -rf temp/safeToDelete.tmp
 
 ## Creating dir structure:
 mkdir -p $PKG/etc/apache-tomcat
 mkdir -p $PKG/etc/{rc.d,profile.d}
 mkdir -p $PKG/usr/share/apache-tomcat
-mkdir -p $PKG/var/cache/apache-tomcat
-mkdir -p $PKG/var/lib/apache-tomcat
-mkdir -p $PKG/var/log/apache-tomcat
-mkdir -p $PKG/var/tmp/apache-tomcat
+mkdir -p $PKG/var/{cache,lib,log,tmp}/apache-tomcat
 
 ## Copying files:
 cp -pR bin $PKG/usr/share/apache-tomcat
@@ -185,6 +183,7 @@ install -m 644 $SRCDIR/slack-desc .
 install -m 644 $SRCDIR/doinst.sh .
 install -m 644 $SRCDIR/${PRGNAME}.info .
 install -m 644 $SRCDIR/${PRGNAME}.SlackBuild .
+install -m 644 $SRCDIR/*.Slackware .
 install -m 644 $SRCDIR/rc.tomcat.new .
 )
 

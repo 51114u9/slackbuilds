@@ -43,26 +43,8 @@
 # fi
 #
 
-# Memory Initial (Minimum) and Maximum Settings
-#
-# The following settings will prevent accumulating Java Memory Leaks from
-# consuming all your memory.
-#
-# -d32|-d64      use a 32/64-bit data model if available
-# -server        select the "server" VM
-# -Xms<size>m|g  set initial Java heap size, m or M = MB and g or G = GB
-# -Xmx<size>m|g  set maximum Java heap size, m or M = MB and g or G = GB
-# -XX:MaxPermSize=<size>m size of the permanent generation
-#
-# (Since memory relocation is slow in java prevent it) You can also use for
-# 32-bit system:
-#
-#CATALINA_OPTS="-d32 -server -Xms100m -Xmx1024m -XX:MaxPermSize=256m"
-#
-# Or for 64-bit system:
-#
-#CATALINA_OPTS="-d64 -server -Xms100m -Xmx1024m -XX:MaxPermSize=256m"
-#
+# Tuning the JVM --> Read README.Slackware
+#CATALINA_OPTS="-Xms50m -Xmx1024m -XX:PermSize=64m -XX:MaxPermSize=256m"
 CATALINA_OPTS=""
 
 case "$( uname -m )" in
@@ -112,7 +94,7 @@ check_tomcat_env() {
   grep -q "^$TOMCAT_USER:" /etc/group || groupadd -g $def_gid $TOMCAT_USER || exit 1
   grep -q "^$TOMCAT_USER:" /etc/passwd || useradd -c "Apache Tomcat" -d $TOMCAT_HOME -g $TOMCAT_USER -u $def_uid $TOMCAT_USER || exit 1
 
-  # Confirm that log file exists.
+  # Confirm that log file exists
   if [ ! -e $TOMCAT_LOG ]; then
     touch $TOMCAT_LOG
     chown $TOMCAT_USER.$TOMCAT_USER $TOMCAT_LOG

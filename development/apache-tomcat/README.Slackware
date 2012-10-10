@@ -1,0 +1,66 @@
+Tuning the JVM
+--------------
+
+CATALINA_OPTS is used to control Tomcat environment options. You can:
+increase heap memory available to the JVM, increase java thread stack
+size, add in a -server to switch from the client (quicker start, slower
+running) to the server (slower starting, quicker running) JVM, and more.
+
+General Options:
+
+-Xms and -Xmx
+
+  Used to define the size of the heap used by the JVM. -Xms defines the
+  initial and -Xmx defines the maximum size of the heap.
+
+  "heap" is where the JVM stores the object instances used by an
+  application.
+
+  Is recommended that the initial and maximum values for heap size be
+  set to the same value. This is often referred to as a fully committed
+  heap and this will instruct the JVM to create a heap that is initially
+  at its maximum size and prevent several full garbage collections from
+  occurring as the heap expands to its maximum size.
+
+-XX:PermSize and -XX:MaxPermSize
+
+  Used to define the size of the permanent generation space. -XX:PermSize
+  defines the initial value and -XX:MaxPermSize defines the maximum value.
+
+  "PermGen" or permanent generation, refers to the location in memory
+  where the JVM stores the class files that have been loaded into memory.
+
+  Is recommended that the initial and maximum values for the size of the
+  permanent generation be set to the same value. This will instruct the
+  JVM to create the permanent generation so that it is initially at its
+  maximum size and prevent possible full garbage collections from
+  occurring as the permanent generation expands to its maximum size.
+
+-Xss
+
+  This setting determines the size of the stack for each thread in the 
+  JVM.
+
+  This value can be lowered, saving memory and increasing the number of
+  threads that can be run on a system. The easiest way to determine a
+  value for your system is to start out with a very low value, for
+  example 128k. Then run Tomcat and look for a StackOverFlow exception
+  in the logs. If you see the exception, then gradually increase the
+  value and restart Tomcat. When the exceptions disappear, you have
+  found the minimal value which works for your deployment.
+
+-server
+
+  This setting will select the Java HotSpot Server VM.
+
+  This will instruct the VM that it is running in a server environment
+  and the default configurations will be changed accordingly.
+
+  Note, this option is really only needed when running 32-bit Linux
+  installations with two or more CPU's and 2GB or more of RAM will
+  enable this option by default. In addition, all 64-bit OS's have this
+  option enabled by default as there is no 64-bit client VM.
+
+Sources:
+
+ http://www.tomcatexpert.com/blog/2011/11/22/performance-tuning-jvm-running-tomcat

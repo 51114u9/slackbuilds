@@ -1,0 +1,6 @@
+PKGNAME=apache-ant
+VERSION=1.7.1
+LICENSE=AL-2.0
+HOMEPAGE=http://ant.apache.org/
+DOWNLOAD=http://archive.apache.org/dist/ant/binaries/apache-ant-1.7.1-bin.tar.bz2
+MD5SUM=9330447f3763b87570dd1118c49a8efd

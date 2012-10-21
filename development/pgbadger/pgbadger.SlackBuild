@@ -22,7 +22,7 @@
 
 ## Name, version and buildtag of the package
 PRGNAME=pgbadger
-VERSION=2.0
+VERSION=2.1
 ARCH=noarch
 RELEASE=1
 BUILDTAG=mfb
@@ -105,6 +105,9 @@ sleep 1
 
 perl Makefile.PL 2>&1 | tee $TMP/build-${PRGNAME}.log
 
+echo "sed -i 's@/usr/share/man@/usr/man@g' Makefile" 2>&1 | tee $TMP/patch-${PRGNAME}.log
+sed -i "s@/usr/share/man@/usr/man@g" Makefile
+
 make -j$NUMCPU 2>&1 | tee $TMP/make-${PRGNAME}.log
 
 echo -e "\nInstalling $PRGNAME...\n"
@@ -112,11 +115,8 @@ sleep 1
 
 make DESTDIR=$PKG install 2>&1 | tee $TMP/install-${PRGNAME}.log
 
-## Move files:
-mv $PKG/usr/share/man $PKG/usr
-
 ## Remove files:
-rm -rf $PKG/usr/{lib64,share}
+rm -rf $PKG/usr/lib{,64}
 
 ## Add documentation:
 mkdir -p $PKG/usr/doc/${PRGNAME}-${VERSION}
@@ -138,6 +138,7 @@ sleep 1
 ## Add slackbuild files:
 mkdir -p $PKG/usr/src/slackbuilds/${PRGNAME}
 (cd $PKG/usr/src/slackbuilds/${PRGNAME}
+install -m 644 $SRCDIR/ChangeLog .
 install -m 644 $SRCDIR/slack-desc .
 install -m 644 $SRCDIR/${PRGNAME}.info .
 install -m 644 $SRCDIR/${PRGNAME}.SlackBuild .

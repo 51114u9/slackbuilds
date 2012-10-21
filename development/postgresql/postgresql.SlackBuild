@@ -24,7 +24,7 @@
 ## Name, version and buildtag of the package
 PRGNAME=postgresql
 VERSION=9.1.5
-RELEASE=1
+RELEASE=2
 BUILDTAG=mfb
 
 ## The documentation files:
@@ -140,6 +140,7 @@ LDFLAGS="$SLKLDFLAGS" \
     --with-python \
     --with-ldap \
     --with-openssl \
+    --with-ossp-uuid \
     --with-libxml \
     --with-libxslt \
     --build=$ARCH-slackware-linux \
@@ -198,6 +199,10 @@ install -m 644 $SRCDIR/rc.postgresql.new .
 mkdir -p $PKG/install
 install -m 644 $SRCDIR/doinst.sh $PKG/install
 install -m 644 $SRCDIR/slack-desc $PKG/install
+
+cat > $OUTPUT/${PRGNAME}-${VERSION}-${ARCH}-${RELEASE}${BUILDTAG}.dep << EOL
+ossp-uuid
+EOL
 
 ## Build the package:
 cd $PKG
@@ -289,7 +294,7 @@ ${PRGNAME}-contrib: Packaged by Marco Antonio Frias B. (marcoantoniofrias@gmail.
 EOL
 
 cat > $OUTPUT/${PRGNAME}-contrib-${VERSION}-${ARCH}-${RELEASE}${BUILDTAG}.dep << EOL
-${PRGNAME} >= ${VERSION}
+ossp-uuid, ${PRGNAME} >= ${VERSION}
 EOL
 
 ## Build the package:

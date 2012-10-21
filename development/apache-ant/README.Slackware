@@ -1,0 +1,36 @@
+Tuning the JVM
+--------------
+
+ANT_OPTS is used to control Ant environment options. You can:
+increase heap memory available to the JVM and increase java thread stack
+size.
+
+General Options:
+
+-Xms and -Xmx
+
+  Used to define the size of the heap used by the JVM. -Xms defines the
+  initial and -Xmx defines the maximum size of the heap.
+
+  "heap" is where the JVM stores the object instances used by an
+  application.
+
+  Is recommended that the initial and maximum values for heap size be
+  set to the same value. This is often referred to as a fully committed
+  heap and this will instruct the JVM to create a heap that is initially
+  at its maximum size and prevent several full garbage collections from
+  occurring as the heap expands to its maximum size.
+
+-XX:PermSize and -XX:MaxPermSize
+
+  Used to define the size of the permanent generation space. -XX:PermSize
+  defines the initial value and -XX:MaxPermSize defines the maximum value.
+
+  "PermGen" or permanent generation, refers to the location in memory
+  where the JVM stores the class files that have been loaded into memory.
+
+  Is recommended that the initial and maximum values for the size of the
+  permanent generation be set to the same value. This will instruct the
+  JVM to create the permanent generation so that it is initially at its
+  maximum size and prevent possible full garbage collections from
+  occurring as the permanent generation expands to its maximum size.

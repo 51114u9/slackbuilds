@@ -24,7 +24,7 @@
 PRGNAME=apache-ant
 VERSION=1.7.1
 ARCH=noarch
-RELEASE=1
+RELEASE=2
 BUILDTAG=mfb
 
 ## The documentation files:
@@ -107,6 +107,10 @@ install -m 755 bin/* $PKG/usr/share/apache-ant/bin
 install -m 644 etc/*.jar etc/*.xsl $PKG/usr/share/apache-ant/etc
 install -m 644 etc/checkstyle/*.xsl $PKG/usr/share/apache-ant/etc/checkstyle
 install -m 644 lib/*.jar $PKG/usr/share/apache-ant/lib
+
+cat > $PKG/etc/ant.conf << EOL
+export ANT_OPTS="-Xmx1024M -XX:MaxPermSize=128M"
+EOL
 
 cat > $PKG/etc/profile.d/ant.csh << EOL
 #!/bin/csh

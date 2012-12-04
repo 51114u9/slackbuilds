@@ -7,5 +7,5 @@ Exec=josm
 Icon=josm
 StartupNotify=true
 Type=Application
-Categories=Graphics;Science;Geoscience;Geography;
+Categories=Geography;Education;Utility;
 Terminal=false

@@ -22,13 +22,10 @@
 
 ## Name, version and buildtag of the package
 PRGNAME=josm
-VERSION=r5515
+VERSION=r5608
 ARCH=noarch
 RELEASE=1
 BUILDTAG=mfb
-
-## The documentation files:
-DOCFILES="CONTRIBUTION LICENSE README gpl-3.0.txt"
 
 ## Where do we look for sources?
 SRCDIR=$(cd $(dirname $0); pwd)
@@ -84,31 +81,27 @@ fi
 ## --- PACKAGE BUILDING ---
 cd $TMP/tmp-${PRGNAME}
 
-echo -e "\nExtracting the source archive(s) for $PRGNAME...\n"
-sleep 1
-
-unzip ${SOURCE}
-find . \( -perm 777 -o -perm 775 -o -perm 711 -o -perm 555 -o -perm 511 \) -exec chmod 755 {} \;
-find . \( -perm 666 -o -perm 664 -o -perm 600 -o -perm 444 -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
-chown -R root.root .
-
 echo -e "\nInstalling $PRGNAME...\n"
 sleep 1
 
 ## Creating dir structure:
 mkdir -p $PKG/usr/bin
-mkdir -p $PKG/usr/share/{josm,applications,pixmaps}
+mkdir -p $PKG/usr/share/{josm,applications}
+mkdir -p $PKG/usr/share/icons/hicolor/{scalable,16x16,22x22,24x24,32x32,48x48,64x64,128x128}/apps
 
 ## Copying files:
 sed "s/@APP@/josm/g;s/@JARNAME@/josm-snapshot-$(echo ${VERSION} | sed 's@r@@')/g" $SRCDIR/jlaunch.sh > $PKG/usr/bin/josm
 chmod 755 $PKG/usr/bin/josm
 install -m 755 ${SOURCE} $PKG/usr/share/josm
 install -m 644 $SRCDIR/josm.desktop $PKG/usr/share/applications
-install -m 644 images/logo.png $PKG/usr/share/pixmaps/josm.png
+install -m 644 $SRCDIR/logo_rasher.svg $PKG/usr/share/icons/hicolor/scalable/apps/josm.svg
+for i in 16 22 24 32 48 64 128; do
+  ( cd $PKG/usr/share/icons/hicolor/${i}x${i}/apps ; /usr/bin/rsvg-convert -w ${i} -h ${i} -f png -o josm.png $SRCDIR/logo_rasher.svg )
+done
 
 ## Add documentation:
 mkdir -p $PKG/usr/doc/${PRGNAME}-${VERSION}
-cp -pR $DOCFILES $PKG/usr/doc/${PRGNAME}-${VERSION} || true
+( cd $PKG/usr/doc/${PRGNAME}-${VERSION} ; tar jxvf $SRCDIR/${PRGNAME}-docs.tar.bz2 )
 find $PKG/usr/doc/${PRGNAME}-${VERSION} -type d -exec chmod 755 {} \;
 chown -R root.root $PKG/usr/doc/${PRGNAME}-${VERSION}
 
@@ -123,8 +116,10 @@ install -m 644 $SRCDIR/slack-desc .
 install -m 644 $SRCDIR/doinst.sh .
 install -m 644 $SRCDIR/${PRGNAME}.info .
 install -m 644 $SRCDIR/${PRGNAME}.SlackBuild .
+install -m 644 $SRCDIR/${PRGNAME}-docs.tar.bz2 .
 install -m 644 $SRCDIR/josm.desktop .
 install -m 644 $SRCDIR/jlaunch.sh .
+install -m 644 $SRCDIR/*.svg .
 )
 
 ## Add a package description:

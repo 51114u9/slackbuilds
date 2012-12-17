@@ -22,7 +22,7 @@
 
 ## Name, version and buildtag of the package
 PRGNAME=osmconvert
-VERSION=0.7F
+VERSION=0.7L
 RELEASE=1
 BUILDTAG=mfb
 

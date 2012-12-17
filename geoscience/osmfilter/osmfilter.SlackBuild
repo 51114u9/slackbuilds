@@ -22,7 +22,7 @@
 
 ## Name, version and buildtag of the package
 PRGNAME=osmfilter
-VERSION=1.2P
+VERSION=1.2R
 RELEASE=1
 BUILDTAG=mfb
 

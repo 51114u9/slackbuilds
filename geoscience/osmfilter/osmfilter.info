@@ -1,6 +1,6 @@
 PKGNAME=osmfilter
-VERSION=1.2P
+VERSION=1.2R
 LICENSE=AGPL-3
 HOMEPAGE=http://wiki.openstreetmap.org/wiki/Osmfilter
 DOWNLOAD=http://m.m.i24.cc/osmfilter.c
-MD5SUM=f7148a50b8c701fb29f2e179babad07c
+MD5SUM=578bcededef157c116365e535beb2a30

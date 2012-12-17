@@ -1,6 +1,6 @@
 PKGNAME=splitter
-VERSION=r200
+VERSION=r202
 LICENSE=GPL-3
 HOMEPAGE=http://www.mkgmap.org.uk/splitter/
-DOWNLOAD=http://www.mkgmap.org.uk/splitter/splitter-r200.tar.gz
-MD5SUM=a23f7d51b393aa33bbff61fe9a4ba9a9
+DOWNLOAD=http://www.mkgmap.org.uk/download/splitter-r202.tar.gz
+MD5SUM=358048f3372fe02a888db602f0001091

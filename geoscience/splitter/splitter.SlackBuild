@@ -22,7 +22,7 @@
 
 ## Name, version and buildtag of the package
 PRGNAME=splitter
-VERSION=r200
+VERSION=r202
 ARCH=noarch
 RELEASE=1
 BUILDTAG=mfb

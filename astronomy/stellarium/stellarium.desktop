@@ -1,0 +1,11 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Stellarium
+Comment=Virtual Planetarium
+Comment[es]=Planetario Virtual
+Exec=stellarium
+Icon=stellarium
+StartupNotify=true
+Type=Application
+Categories=Education;Science;Astronomy;
+Terminal=false

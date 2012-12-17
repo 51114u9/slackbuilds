@@ -2,5 +2,5 @@ PACKAGE=schemaSpy
 VERSION=5.0.0
 LICENSE=LGPL-2.1
 HOMEPAGE=http://schemaspy.sourceforge.net/
-DOWNLOAD=http://downloads.sourceforge.net/project/schemaspy/schemaSpy_5.0.0.jar
+DOWNLOAD=http://downloads.sourceforge.net/schemaspy/schemaSpy_5.0.0.jar
 MD5SUM=d1a4ca73e932f8c22d6da0f563f42690

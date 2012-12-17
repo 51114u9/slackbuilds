@@ -80,11 +80,7 @@ start() {
 
   echo -n "Starting PROGRAM: "
 
-  if [ $? -eq 0 ]; then
-    echo "ok"
-  else
-    echo "failed"
-  fi
+  [ $? -eq 0 ] && echo "ok" || echo "failed"
 }
 
 stop() {
@@ -103,11 +99,7 @@ stop() {
 
   echo -n "Shutting down PROGRAM: "
 
-  if [ $? -eq 0 ]; then
-    echo "ok"
-  else
-    echo "failed"
-  fi
+  [ $? -eq 0 ] && echo "ok" || echo "failed"
 }
 
 restart() {
@@ -132,11 +124,7 @@ reload() {
 
   echo -n "Reloading PROGRAM: "
 
-  if [ $? -eq 0 ]; then
-    echo "ok"
-  else
-    echo "failed"
-  fi
+  [ $? -eq 0 ] && echo "ok" || echo "failed"
 }
 
 status() {

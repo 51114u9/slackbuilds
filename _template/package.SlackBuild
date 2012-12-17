@@ -179,6 +179,14 @@ CXXFLAGS="$SLKCFLAGS" \
     --build=$ARCH-slackware-linux \
     2>&1 | tee $TMP/configure-${PRGNAME}.log
 
+cmake \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_CXX_FLAGS="$SLKCFLAGS" \
+    -DCMAKE_C_FLAGS="$SLKCFLAGS" \
+    -DLIB_SUFFIX="$LIBDIRSUFFIX" \
+    -DCMAKE_BUILD_TYPE="release" \
+    2>&1 | tee $TMP/configure-${PRGNAME}.log
+
 perl Makefile.PL 2>&1 | tee $TMP/build-${PRGNAME}.log
 
 make -j$NUMCPU 2>&1 | tee $TMP/make-${PRGNAME}.log

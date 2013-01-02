@@ -1,0 +1,6 @@
+PKGNAME=lensfun
+VERSION=0.2.6
+LICENSE=LGPL-3_CCPL-Attribution-ShareAlike-3
+HOMEPAGE=http://lensfun.berlios.de/
+DOWNLOAD=http://prdownload.berlios.de/lensfun/lensfun-0.2.6.tar.bz2
+MD5SUM=740e4749db04da0a597630dd6339b966

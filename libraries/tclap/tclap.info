@@ -1,6 +1,0 @@
-PKGNAME=tclap
-VERSION=1.2.1
-LICENSE=MIT
-HOMEPAGE=http://tclap.sourceforge.net/
-DOWNLOAD=http://downloads.sourceforge.net/tclap/tclap-1.2.1.tar.gz
-MD5SUM=eb0521d029bf3b1cc0dcaa7e42abf82a

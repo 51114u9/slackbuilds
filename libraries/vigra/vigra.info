@@ -1,6 +1,0 @@
-PKGNAME=vigra
-VERSION=1.9.0
-LICENSE=MIT
-HOMEPAGE=http://hci.iwr.uni-heidelberg.de/vigra/
-DOWNLOAD=http://hci.iwr.uni-heidelberg.de/vigra/vigra-1.9.0-src.tar.gz
-MD5SUM=b6155afe1ea967917d2be16d98a85404

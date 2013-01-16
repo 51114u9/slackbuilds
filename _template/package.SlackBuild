@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright 2012 Marco Antonio Frias B., Cochabamba, BO
+# Copyright 2012-2013 Marco Antonio Frias B., Cochabamba, BO
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
@@ -170,10 +170,8 @@ CXXFLAGS="$SLKCFLAGS" \
     --docdir=/usr/doc/${PRGNAME}-${VERSION} \
     --enable-shared \
     --disable-static \
-
-    --with-java=/usr/lib${LIBDIRSUFFIX}/java/bin/java \
-    --with-javac=/usr/lib${LIBDIRSUFFIX}/java/bin/javac \
-
+    --with-java=/usr/lib${LIBDIRSUFFIX}/java \
+    --with-javac=/usr/lib${LIBDIRSUFFIX}/java \
     --program-prefix= \
     --program-suffix= \
     --build=$ARCH-slackware-linux \
@@ -203,7 +201,7 @@ python setup.py install --root=$PKG 2>&1 | tee $TMP/install-${PRGNAME}.log
 ## Creating dir structure:
 mkdir -p $PKG/usr/bin
 mkdir -p $PKG/usr/share/PROGRAM
-mkdir -p $PKG/usr/share/{applications,pixmaps}
+mkdir -p $PKG/usr/share/{applications,mime/packages,pixmaps}
 mkdir -p $PKG/usr/share/icons/hicolor/{scalable,16x16,22x22,24x24,32x32,48x48,64x64,128x128}/apps
 
 ## Copying files:
@@ -213,6 +211,7 @@ chmod 755 $PKG/usr/bin/PROGRAM
 install -m 755 PROGRAM.jar $PKG/usr/share/PROGRAM
 install -m 755 PROGRAM.py $PKG/usr/share/PROGRAM
 install -m 644 $SRCDIR/PROGRAM.desktop $PKG/usr/share/applications
+install -m 644 $SRCDIR/PROGRAM.xml $PKG/usr/share/mime/packages
 install -m 644 $SRCDIR/PROGRAM.png $PKG/usr/share/pixmaps
 install -m 644 $SRCDIR/PROGRAM.svg $PKG/usr/share/icons/hicolor/scalable/apps
 for i in 16 22 24 32 48 64 128; do
@@ -268,6 +267,9 @@ install -m 644 $SRCDIR/PROGRAM.desktop .
 install -m 644 $SRCDIR/rc.PROGRAM .
 install -m 644 $SRCDIR/jlaunch.sh .
 install -m 644 $SRCDIR/pylaunch.sh .
+install -m 644 $SRCDIR/*.svg .
+install -m 644 $SRCDIR/*.png .
+install -m 644 $SRCDIR/*.xml .
 )
 
 ## Add a package description:

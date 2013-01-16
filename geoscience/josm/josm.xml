@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+  <mime-type type="application/x-nmea">
+    <sub-class-of type="text/plain"/>
+    <comment xml:lang="en">NMEA data</comment>
+    <comment xml:lang="de">NMEA-Daten</comment>
+    <glob pattern="*.nmea" />
+    <glob pattern="*.nma" />
+    <glob pattern="*.nme" />
+    <icon name="josm" />
+  </mime-type>
+  <mime-type type="application/x-geojson">
+    <sub-class-of type="text/plain"/>
+    <comment xml:lang="en">GeoJSON data</comment>
+    <comment xml:lang="de">GeoJSON-Daten</comment>
+    <glob pattern="*.geojson" />
+    <glob pattern="*.json" />
+    <icon name="josm" />
+  </mime-type>
+  <mime-type type="application/x-osm+xml">
+    <sub-class-of type="application/xml"/>
+    <comment xml:lang="en">OpenStreetMap data</comment>
+    <comment xml:lang="de">OpenStreetMap-Daten</comment>
+    <magic priority="80">
+      <match value="&lt;osm" type="string" offset="0:512"/>
+    </magic>
+    <glob pattern="*.osm" />
+    <glob pattern="*.osc" />
+    <icon name="josm" />
+  </mime-type>
+  <mime-type type="application/x-gzip-compressed-osm+xml">
+    <sub-class-of type="application/x-gzip"/>
+    <comment xml:lang="en">OpenStreetMap data</comment>
+    <comment xml:lang="de">OpenStreetMap-Daten</comment>
+    <glob pattern="*.osm.gz" />
+    <glob pattern="*.osc.gz" />
+    <icon name="josm" />
+  </mime-type>
+  <mime-type type="application/x-bzip-compressed-osm+xml">
+    <sub-class-of type="application/x-bzip"/>
+    <comment xml:lang="en">OpenStreetMap data</comment>
+    <comment xml:lang="de">OpenStreetMap-Daten</comment>
+    <glob pattern="*.osm.bz2" />
+    <glob pattern="*.osc.bz2" />
+    <icon name="josm" />
+  </mime-type>
+  <mime-type type="application/x-gpx+xml">
+    <sub-class-of type="application/xml"/>
+    <comment xml:lang="en">GPX track</comment>
+    <comment xml:lang="de">GPX-Track</comment>
+    <magic priority="90">
+      <match value="&lt;gpx" type="string" offset="0:256"/>
+    </magic>
+    <glob pattern="*.gpx" />
+    <glob pattern="*.GPX" />
+    <root-XML namespaceURI="http://www.topografix.com/GPX/1/0" localName="gpx"/>
+    <icon name="josm" />
+  </mime-type>
+  <mime-type type="application/x-gzip-compressed-gpx+xml">
+    <sub-class-of type="application/x-gzip"/>
+    <comment xml:lang="en">GPX track</comment>
+    <comment xml:lang="de">GPX-Track</comment>
+    <glob pattern="*.gpx.gz" />
+    <glob pattern="*.GPX.gz" />
+    <icon name="josm" />
+  </mime-type>
+  <mime-type type="application/x-bzip-compressed-gpx+xml">
+    <sub-class-of type="application/x-bzip"/>
+    <comment xml:lang="en">GPX track</comment>
+    <comment xml:lang="de">GPX-Track</comment>
+    <glob pattern="*.gpx.bz2" />
+    <glob pattern="*.GPX.bz2" />
+    <icon name="josm" />
+  </mime-type>
+  <mime-type type="application/x-kml+xml">
+    <sub-class-of type="application/xml"/>
+    <comment xml:lang="en">KML track</comment>
+    <comment xml:lang="de">KML-Track</comment>
+    <magic priority="90">
+      <match value="&lt;kml" type="string" offset="0:256"/>
+    </magic>
+    <glob pattern="*.kml" />
+    <glob pattern="*.KML" />
+    <root-XML namespaceURI="http://www.opengis.net/kml/2.2" localName="kml"/>
+    <icon name="josm" />
+  </mime-type>
+  <mime-type type="application/x-gzip-compressed-kml+xml">
+    <sub-class-of type="application/x-gzip"/>
+    <comment xml:lang="en">KML track</comment>
+    <comment xml:lang="de">KML-Track</comment>
+    <glob pattern="*.kml.gz" />
+    <glob pattern="*.KML.gz" />
+    <icon name="josm" />
+  </mime-type>
+  <mime-type type="application/x-bzip-compressed-kml+xml">
+    <sub-class-of type="application/x-bzip"/>
+    <comment xml:lang="en">KML track</comment>
+    <comment xml:lang="de">KML-Track</comment>
+    <glob pattern="*.kml.bz2" />
+    <glob pattern="*.KML.bz2" />
+    <icon name="josm" />
+  </mime-type>
+  <mime-type type="application/x-josm-preset">
+    <sub-class-of type="application/xml"/>
+    <comment xml:lang="en">JOSM preset</comment>
+    <comment xml:lang="de">JOSM-Objektvorlage</comment>
+    <root-XML namespaceURI="http://josm.openstreetmap.de/tagging-preset-1.0" localName="presets"/>
+    <magic priority="80">
+      <match value="&lt;presets" type="string" offset="0:4096"/>
+      <match value="&lt;annotations" type="string" offset="0:4096"/>
+    </magic>
+    <!-- <glob pattern="*.xml" /> -->
+    <icon name="josm" />
+  </mime-type>
+  <mime-type type="application/x-josm-style">
+    <sub-class-of type="application/xml"/>
+    <comment xml:lang="en">JOSM mappaint style</comment>
+    <comment xml:lang="de">JOSM-Zeichenvorlage</comment>
+    <root-XML namespaceURI="http://josm.openstreetmap.de/mappaint-style-1.0" localName="rules"/>
+    <magic priority="80">
+      <match value="&lt;rules" type="string" offset="0:4096"/>
+    </magic>
+    <!-- <glob pattern="*.xml" /> -->
+    <icon name="josm" />
+  </mime-type>
+  <mime-type type="application/x-josm-maps">
+    <sub-class-of type="application/xml"/>
+    <comment xml:lang="en">JOSM map sources</comment>
+    <comment xml:lang="de">JOSM-Kartenquellen</comment>
+    <root-XML namespaceURI="http://josm.openstreetmap.de/maps-1.0" localName="imagery"/>
+    <magic priority="80">
+      <match value="&lt;imagery" type="string" offset="0:4096"/>
+    </magic>
+    <!-- <glob pattern="*.xml" /> -->
+    <icon name="josm" />
+  </mime-type>
+  <mime-type type="application/x-josm-preferences">
+    <sub-class-of type="application/xml"/>
+    <comment xml:lang="en">JOSM preferences</comment>
+    <comment xml:lang="de">JOSM-Einstellungen</comment>
+    <root-XML namespaceURI="http://josm.openstreetmap.de/preferences-1.0" localName="preferences"/>
+    <magic priority="80">
+      <match value="&lt;preferences" type="string" offset="0:4096"/>
+    </magic>
+    <!-- <glob pattern="*.xml" /> -->
+    <icon name="josm" />
+  </mime-type>
+  <mime-type type="text/x-mapcss">
+    <sub-class-of type="text/css"/>
+    <comment xml:lang="en">MapCSS paint style</comment>
+    <comment xml:lang="de">MapCSS-Zeichenvorlage</comment>
+    <glob pattern="*.mapcss" />
+    <icon name="josm" />
+  </mime-type>
+</mime-info>

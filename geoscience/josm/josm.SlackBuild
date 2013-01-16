@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright 2010-2012 Marco Antonio Frias B., Cochabamba, BO
+# Copyright 2010-2013 Marco Antonio Frias B., Cochabamba, BO
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
@@ -22,7 +22,7 @@
 
 ## Name, version and buildtag of the package
 PRGNAME=josm
-VERSION=r5608
+VERSION=r5665
 ARCH=noarch
 RELEASE=1
 BUILDTAG=mfb
@@ -52,11 +52,9 @@ P1=${1:-1}
 
 ## Create working directories:
 mkdir -p $OUTPUT             # place for the package to be saved
-mkdir -p $TMP/tmp-${PRGNAME} # location to build the source
 mkdir -p $PKG                # place for the package to be built
 
 rm -rf $PKG/*                # always erase old package's contents
-rm -rf $TMP/tmp-${PRGNAME}/* # remove the remnants of previous build
 rm -rf $TMP/*-${PRGNAME}.log # remove log files
 
 ## Source file availability:
@@ -86,17 +84,18 @@ sleep 1
 
 ## Creating dir structure:
 mkdir -p $PKG/usr/bin
-mkdir -p $PKG/usr/share/{josm,applications}
+mkdir -p $PKG/usr/share/{josm,applications,mime/packages}
 mkdir -p $PKG/usr/share/icons/hicolor/{scalable,16x16,22x22,24x24,32x32,48x48,64x64,128x128}/apps
 
 ## Copying files:
-sed "s/@APP@/josm/g;s/@JARNAME@/josm-snapshot-$(echo ${VERSION} | sed 's@r@@')/g" $SRCDIR/jlaunch.sh > $PKG/usr/bin/josm
+sed "s/@JARNAME@/josm-snapshot-$(echo ${VERSION} | sed 's@r@@')/g" $SRCDIR/josm.sh > $PKG/usr/bin/josm
 chmod 755 $PKG/usr/bin/josm
 install -m 755 ${SOURCE} $PKG/usr/share/josm
 install -m 644 $SRCDIR/josm.desktop $PKG/usr/share/applications
-install -m 644 $SRCDIR/logo_rasher.svg $PKG/usr/share/icons/hicolor/scalable/apps/josm.svg
+install -m 644 $SRCDIR/josm.xml $PKG/usr/share/mime/packages
+install -m 644 $SRCDIR/josm.svg $PKG/usr/share/icons/hicolor/scalable/apps
 for i in 16 22 24 32 48 64 128; do
-  ( cd $PKG/usr/share/icons/hicolor/${i}x${i}/apps ; /usr/bin/rsvg-convert -w ${i} -h ${i} -f png -o josm.png $SRCDIR/logo_rasher.svg )
+  ( cd $PKG/usr/share/icons/hicolor/${i}x${i}/apps ; /usr/bin/rsvg-convert -w ${i} -h ${i} -f png -o josm.png $SRCDIR/josm.svg )
 done
 
 ## Add documentation:
@@ -118,8 +117,9 @@ install -m 644 $SRCDIR/${PRGNAME}.info .
 install -m 644 $SRCDIR/${PRGNAME}.SlackBuild .
 install -m 644 $SRCDIR/${PRGNAME}-docs.tar.bz2 .
 install -m 644 $SRCDIR/josm.desktop .
-install -m 644 $SRCDIR/jlaunch.sh .
-install -m 644 $SRCDIR/*.svg .
+install -m 644 $SRCDIR/josm.sh .
+install -m 644 $SRCDIR/josm.svg .
+install -m 644 $SRCDIR/josm.xml .
 )
 
 ## Add a package description:

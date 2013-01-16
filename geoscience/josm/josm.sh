@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright 2012 Marco Antonio Frias B., Cochabamba, BO
+# Copyright 2012-2013 Marco Antonio Frias B., Cochabamba, BO
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
@@ -35,7 +35,7 @@ fi
 RUNJAVA="$JRE_HOME"/bin/java
 
 # Set full path to app home directory
-APP_HOME=/usr/share/@APP@
+APP_HOME=/usr/share/josm
 
 # Execute
-$RUNJAVA -jar $APP_HOME/@JARNAME@.jar "$@"
+$RUNJAVA -Xms64M -Xmx1024M -XX:+UseParallelGC -XX:+UseAdaptiveSizePolicy -jar $APP_HOME/@JARNAME@.jar "$@"

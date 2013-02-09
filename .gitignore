@@ -11,3 +11,4 @@
 
 # except docs
 !*-docs.tar.bz2
+!*-extras.tar.gz

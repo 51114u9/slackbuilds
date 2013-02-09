@@ -1,6 +1,6 @@
 PKGNAME=pgbadger
-VERSION=2.1
+VERSION=2.3
 LICENSE=BSD
 HOMEPAGE=http://dalibo.github.com/pgbadger/
-DOWNLOAD=https://github.com/downloads/dalibo/pgbadger/pgbadger-2.1.tar.gz
-MD5SUM=ee961cd37c876687414c76192d8dad20
+DOWNLOAD=http://downloads.sourceforge.net/pgbadger/pgbadger-2.3.tar.gz
+MD5SUM=fd03351655c27bbfe3b95f05d121dfb6

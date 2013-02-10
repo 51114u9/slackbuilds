@@ -1,0 +1,6 @@
+PKGNAME=stjerm
+VERSION=0.16
+LICENSE=GPL-2
+HOMEPAGE=http://code.google.com/p/stjerm-terminal/
+DOWNLOAD=http://stjerm-terminal.googlecode.com/files/stjerm-0.16.tar.gz
+MD5SUM=c6daaef56ea7a6ecaf3bfc1f735239cf

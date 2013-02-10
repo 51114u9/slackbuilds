@@ -1,0 +1,69 @@
+Tips and Tricks
+===============
+
+- Best Options
+  ------------
+
+After several tests, I got to set some options:
+
+Border type:        -b thin
+Color palette:      -c0 to -c15 tango color palette [1]
+Background color:   -bg 000000 (black)
+Foreground color:   -fg babdb6 (gray)
+Terminal font/size: -fn "Terminus Medium 11"
+Shortcut key:       -k F12
+Opacity:            -o 80
+Window height:      -h 600  (monitor height size: 768px)
+                    -h 750  (monitor height size: 900px)
+Window width:       -w 1280 (monitor width size: 1600px)
+                    -w 1152 (monitor width size: 1440px)
+                    -w 1024 (monitor width size: 1280px)
+                    -w 900  (monitor width size: 1024px)
+
+- Autostart
+  ---------
+
+If we want to start automatically write a file "stjerm.desktop" in the
+folder .config/autostart within the user's account.
+
+Using the options described above a potential file (UTF-8) is as follows:
+
+--- 8< begin file: ~/.config/autostart/stjerm.desktop ---
+
+[Desktop Entry]
+Version=1.0
+Name=Stjerm Terminal
+Comment=Roll-down Terminal Emulator
+Exec=stjerm -b thin -c0 2e3436 -c8 555753 -c1 cc0000 -c9 ef2929 -c2 4e9a06 -c10 73d216 -c3 c4a000 -c11 edd400 -c4 3465a4 -c12 729fcf -c5 75507b -c13 ad7fa8 -c6 06989a -c14 34e2e2 -c7 d3d7cf -c15 eeeeec -bg 000000 -fg babdb6 -fn "Terminus Medium 11" -k F12 -o 80 -w 1280 -h 750
+Icon=utilities-terminal
+Terminal=false
+Type=Application
+Categories=GTK;System;TerminalEmulator;Utility;
+StartupNotify=false
+
+--- 8< end file ---
+
+- Running under Compiz
+  --------------------
+
+There is an issue with Compiz where stjerm does not receive focus after
+pressing the hot key. To resolve this issue:
+
+ 1. Run Compiz Settings Manager
+ 2. Select General Options
+ 3. Select Focus & Raise Behaviour
+
+It will change focus behaviour globally:
+
+ 4. Set Focus Prevention Level to Off
+
+If you don't like it, add exception for stjerm:
+
+ 4. Set Focus Prevention Level to Normal
+ 5. Set Focus Prevention Windows to '(any) & !(name=stjerm)'
+
+Links:
+
+ [1] http://tango.freedesktop.org/Tango_Icon_Theme_Guidelines#Color_Palette
+
+Enjoy!

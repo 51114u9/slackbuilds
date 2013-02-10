@@ -1,0 +1,6 @@
+PKGNAME=lshw
+VERSION=B.02.16
+LICENSE=GPL-2
+HOMEPAGE=http://ezix.org/project/wiki/HardwareLiSter
+DOWNLOAD=http://ezix.org/software/files/lshw-B.02.16.tar.gz
+MD5SUM=67479167add605e8f001097c30e96d0d

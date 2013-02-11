@@ -1,0 +1,6 @@
+PKGNAME=transmission
+VERSION=2.60
+LICENSE=GPL-2_MIT
+HOMEPAGE=http://www.transmissionbt.com/
+DOWNLOAD=http://download.transmissionbt.com/files/transmission-2.60.tar.xz
+MD5SUM=2aff84c29a3c4b51ac5682a89d96bda5

@@ -1,0 +1,6 @@
+PKGNAME=transmission-remote-cli
+VERSION=1.4.7
+LICENSE=GPL-3
+HOMEPAGE=https://github.com/fagga/transmission-remote-cli
+DOWNLOAD=https://github.com/fagga/transmission-remote-cli/archive/v1.4.7.tar.gz
+MD5SUM=f8614f2f7baf94e42ff1d80c30e5852b

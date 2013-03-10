@@ -22,7 +22,7 @@
 
 ## Name, version and buildtag of the package
 PRGNAME=josm
-VERSION=r5665
+VERSION=r5770
 ARCH=noarch
 RELEASE=1
 BUILDTAG=mfb
@@ -52,9 +52,11 @@ P1=${1:-1}
 
 ## Create working directories:
 mkdir -p $OUTPUT             # place for the package to be saved
+mkdir -p $TMP/tmp-${PRGNAME} # location to build the source
 mkdir -p $PKG                # place for the package to be built
 
 rm -rf $PKG/*                # always erase old package's contents
+rm -rf $TMP/tmp-${PRGNAME}/* # remove the remnants of previous build
 rm -rf $TMP/*-${PRGNAME}.log # remove log files
 
 ## Source file availability:

@@ -38,4 +38,4 @@ RUNJAVA="$JRE_HOME"/bin/java
 APP_HOME=/usr/share/josm
 
 # Execute
-$RUNJAVA -Xms64M -Xmx1024M -XX:+UseParallelGC -XX:+UseAdaptiveSizePolicy -jar $APP_HOME/@JARNAME@.jar "$@"
+$RUNJAVA -Xms64M -Xmx1024M -jar $APP_HOME/@JARNAME@.jar "$@"

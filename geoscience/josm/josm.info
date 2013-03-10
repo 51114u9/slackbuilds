@@ -1,6 +1,7 @@
 PKGNAME=josm
-VERSION=r5665
+VERSION=r5770
 LICENSE=GPL-3
 HOMEPAGE=http://josm.openstreetmap.de/
-DOWNLOAD=http://josm.openstreetmap.de/download/josm-snapshot-5665.jar
-MD5SUM=a6392c42009f4e87c42b68e7777d87cb
+DOWNLOAD=http://josm.openstreetmap.de/download/josm-snapshot-5770.jar
+MD5SUM=52b7efc6018c26e8ee55ff0ccb0c6bfb
+REQUIRES="jre|jdk"

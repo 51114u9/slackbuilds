@@ -22,7 +22,7 @@
 
 ## Name, version and buildtag of the package
 PRGNAME=josm
-VERSION=r5770
+VERSION=r5815
 ARCH=noarch
 RELEASE=1
 BUILDTAG=mfb
@@ -85,9 +85,9 @@ echo -e "\nInstalling $PRGNAME...\n"
 sleep 1
 
 ## Creating dir structure:
-mkdir -p $PKG/usr/bin
-mkdir -p $PKG/usr/share/{josm,applications,mime/packages}
-mkdir -p $PKG/usr/share/icons/hicolor/{scalable,16x16,22x22,24x24,32x32,48x48,64x64,128x128}/apps
+install -m 755 -d $PKG/usr/bin
+install -m 755 -d $PKG/usr/share/{josm,applications,mime/packages}
+install -m 755 -d $PKG/usr/share/icons/hicolor/{scalable,16x16,22x22,24x24,32x32,48x48,64x64,128x128}/apps
 
 ## Copying files:
 sed "s/@JARNAME@/josm-snapshot-$(echo ${VERSION} | sed 's@r@@')/g" $SRCDIR/josm.sh > $PKG/usr/bin/josm

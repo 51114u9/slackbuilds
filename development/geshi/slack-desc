@@ -1,0 +1,19 @@
+# HOW TO EDIT THIS FILE:
+# The "handy ruler" below makes it easier to edit a package description.  Line
+# up the first '|' above the ':' following the base package name, and the '|'
+# on the right side marks the last column you can put a character in.  You must
+# make exactly 11 lines for the formatting to be correct.  It's also
+# customary to leave one space after the ':'.
+
+     |-----handy-ruler------------------------------------------------------|
+geshi: geshi (Generic Syntax Highlighter)
+geshi:
+geshi: Generic Syntax Highlighter for PHP. Used to highlight almost any code
+geshi: for the web. Nearly 150 supported languages: PHP, HTML, C and more.
+geshi:
+geshi:
+geshi:
+geshi:
+geshi: More information at: http://qbnz.com/highlighter/
+geshi:
+geshi: Packaged by Marco Antonio Frias B. (marcoantoniofrias@gmail.com)

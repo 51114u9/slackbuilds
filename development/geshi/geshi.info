@@ -1,0 +1,7 @@
+PKGNAME=geshi
+VERSION=1.0.8.11
+LICENSE=GPL-2
+HOMEPAGE=http://qbnz.com/highlighter/
+DOWNLOAD=http://downloads.sourceforge.net/geshi/GeSHi-1.0.8.11.tar.bz2
+MD5SUM=d35e6e5f5f28ae0d087f9990510a5760
+REQUIRES="php"

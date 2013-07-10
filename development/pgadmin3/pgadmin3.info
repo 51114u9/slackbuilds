@@ -4,3 +4,4 @@ LICENSE=BSD
 HOMEPAGE=http://www.pgadmin.org/
 DOWNLOAD=http://ftp.postgresql.org/pub/pgadmin3/release/v1.16.1/src/pgadmin3-1.16.1.tar.gz
 MD5SUM=f3bc59630f0dc9600d4ad125097ce2fa
+REQUIRES="postgresql,wxGTK|wxPython"

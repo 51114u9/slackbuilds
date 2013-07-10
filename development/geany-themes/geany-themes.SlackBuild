@@ -22,13 +22,13 @@
 
 ## Name, version and buildtag of the package
 PRGNAME=geany-themes
-VERSION=20130402
+VERSION=20130709
 ARCH=noarch
 RELEASE=1
 BUILDTAG=mfb
 
 ## The documentation files:
-DOCFILES="AUTHORS COPYING README*"
+DOCFILES="ADDING-A-THEME.md AUTHORS COPYING MAKING-A-RELEASE.md README*"
 
 ## Where do we look for sources?
 SRCDIR=$(cd $(dirname $0); pwd)

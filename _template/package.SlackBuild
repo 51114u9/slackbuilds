@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright 2012-2013 Marco Antonio Frias B., Cochabamba, BO
+# Copyright 2013-2014 Marco Antonio Frias B., Cochabamba, BO
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
@@ -46,8 +46,11 @@ OUTPUT=${OUTPUT:-/tmp}
 SOURCE="$SRCDIR/${PRGNAME}-${VERSION}.tar.xz"
 #SOURCE="$SRCDIR/${PRGNAME}-${VERSION}.tar.bz2"
 #SOURCE="$SRCDIR/${PRGNAME}-${VERSION}.tar.gz"
+#SOURCE="$SRCDIR/${PRGNAME}-${VERSION}.7z"
+#SOURCE="$SRCDIR/${PRGNAME}-${VERSION}.zip"
 #SOURCE="$SRCDIR/${PRGNAME}-${VERSION}.jar"
 SRCURL="$(grep DOWNLOAD ${PRGNAME}.info | cut -d = -f 2)"
+#SRCURL="$(grep HOMEPAGE ${PRGNAME}.info | cut -d = -f 2)"
 
 ##
 ## --- with a little luck, you won't have to edit below this point ---
@@ -103,6 +106,10 @@ rm -rf $TMP/tmp-${PRGNAME}/* # remove the remnants of previous build
 rm -rf $TMP/*-${PRGNAME}.log # remove log files
 
 ## Source file availability:
+#if ! [ -f ${SOURCE} ]; then
+#  echo -e "\nFile '$(basename ${SOURCE})' not available, download it manually from ${SRCURL}... aborting the build.\n"
+#  exit 1
+#fi
 if ! [ -f ${SOURCE} ]; then
   if ! [ "x${SRCURL}" == "x" ]; then
     # Check if the $SRCDIR is writable at all - if not, download to $OUTPUT
@@ -130,6 +137,8 @@ sleep 1
 tar -xvf ${SOURCE}
 #tar -xjvf ${SOURCE}
 #tar -xzvf ${SOURCE}
+#unzip ${SOURCE}
+#7z x ${SOURCE}
 cd ${PRGNAME}-${VERSION}
 find . \( -perm 777 -o -perm 775 -o -perm 711 -o -perm 555 -o -perm 511 \) -exec chmod 755 {} \;
 find . \( -perm 666 -o -perm 664 -o -perm 600 -o -perm 444 -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
@@ -198,13 +207,11 @@ make DESTDIR=$PKG install 2>&1 | tee $TMP/install-${PRGNAME}.log
 
 python setup.py install --root=$PKG 2>&1 | tee $TMP/install-${PRGNAME}.log
 
-## Creating dir structure:
-mkdir -p $PKG/usr/bin
-mkdir -p $PKG/usr/share/PROGRAM
-mkdir -p $PKG/usr/share/{applications,mime/packages,pixmaps}
-mkdir -p $PKG/usr/share/icons/hicolor/{scalable,16x16,22x22,24x24,32x32,48x48,64x64,128x128}/apps
+install -m 755 -d $PKG/usr/bin
+install -m 755 -d $PKG/usr/share/PROGRAM
+install -m 755 -d $PKG/usr/share/{applications,mime/packages,pixmaps}
+install -m 755 -d $PKG/usr/share/icons/hicolor/{scalable,16x16,22x22,24x24,32x32,48x48,64x64,128x128}/apps
 
-## Copying files:
 sed "s/@APP@/PROGRAM/g;s/@JARNAME@/PROGRAM/g" $SRCDIR/jlaunch.sh > $PKG/usr/bin/PROGRAM
 sed "s/@APP@/PROGRAM/g;s/@PYTHONNAME@/PROGRAM/g" $SRCDIR/pylaunch.sh > $PKG/usr/bin/PROGRAM
 chmod 755 $PKG/usr/bin/PROGRAM
@@ -263,7 +270,10 @@ install -m 644 $SRCDIR/${PRGNAME}.info .
 install -m 644 $SRCDIR/${PRGNAME}_*.patch .
 install -m 644 $SRCDIR/${PRGNAME}.SlackBuild .
 install -m 644 $SRCDIR/${PRGNAME}-docs.tar.bz2 .
-install -m 644 $SRCDIR/PROGRAM.desktop .
+install -m 644 $SRCDIR/${PRGNAME}-extras.tar.bz2 .
+install -m 644 $SRCDIR/HOWTO-BUILD-TXZ .
+install -m 644 $SRCDIR/*.desktop .
+install -m 644 $SRCDIR/README.* .
 install -m 644 $SRCDIR/rc.PROGRAM .
 install -m 644 $SRCDIR/jlaunch.sh .
 install -m 644 $SRCDIR/pylaunch.sh .

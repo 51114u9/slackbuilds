@@ -146,28 +146,33 @@ status() {
   esac
 }
 
+version() {
+}
+
 # Parse command line parameters
 case $1 in
-start)
-  start
-  ;;
-stop)
-  stop
-  ;;
-restart)
-  restart
-  ;;
-reload)
-  reload
-  ;;
-status)
-  status
-  ;;
-*)
-  # Print help
-  echo "Usage: $0 {start|stop|restart|reload|status}" 1>&2
-  exit 1
-  ;;
+  start)
+    start
+    ;;
+  stop)
+    stop
+    ;;
+  restart)
+    restart
+    ;;
+  reload)
+    reload
+    ;;
+  status)
+    status
+    ;;
+  version)
+    version
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart|reload|status|version}" 1>&2
+    exit 1
+    ;;
 esac
 
 exit 0

@@ -23,7 +23,7 @@
 ## Name, version and buildtag of the package
 PRGNAME=pgadmin3
 VERSION=1.16.1
-RELEASE=1
+RELEASE=2
 BUILDTAG=mfb
 
 ## The documentation files:

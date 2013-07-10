@@ -23,7 +23,7 @@
 
 ## Name, version and buildtag of the package
 PRGNAME=postgresql
-VERSION=9.2.2
+VERSION=9.2.4
 RELEASE=1
 BUILDTAG=mfb
 
@@ -143,6 +143,8 @@ LDFLAGS="$SLKLDFLAGS" \
     --with-ossp-uuid \
     --with-libxml \
     --with-libxslt \
+    --with-system-tzdata=/usr/share/zoneinfo \
+    --enable-thread-safety \
     --build=$ARCH-slackware-linux \
     2>&1 | tee $TMP/configure-${PRGNAME}.log
 
@@ -156,12 +158,8 @@ make DESTDIR=$PKG \
     -C doc/src/sgml install-man install-html \
     2>&1 | tee -a $TMP/install-${PRGNAME}.log
 
-## Creating dir structure:
-mkdir -p $PKG/etc/rc.d
-
-## Copying files:
-install -m 644 $SRCDIR/rc.postgresql.new $PKG/etc/rc.d
-chown -R root.root $PKG/etc/rc.d
+install -m 755 -d $PKG/etc/rc.d
+install -m 755 $SRCDIR/rc.postgresd.new $PKG/etc/rc.d
 
 ## Add documentation:
 mkdir -p $PKG/usr/doc/${PRGNAME}-${VERSION}
@@ -192,7 +190,7 @@ install -m 644 $SRCDIR/slack-desc .
 install -m 644 $SRCDIR/doinst.sh .
 install -m 644 $SRCDIR/${PRGNAME}.info .
 install -m 644 $SRCDIR/${PRGNAME}.SlackBuild .
-install -m 644 $SRCDIR/rc.postgresql.new .
+install -m 644 $SRCDIR/rc.postgresd.new .
 )
 
 ## Add a package description:
@@ -264,7 +262,7 @@ install -m 644 $SRCDIR/slack-desc .
 install -m 644 $SRCDIR/doinst.sh .
 install -m 644 $SRCDIR/${PRGNAME}.info .
 install -m 644 $SRCDIR/${PRGNAME}.SlackBuild .
-install -m 644 $SRCDIR/rc.postgresql.new .
+install -m 644 $SRCDIR/rc.postgresd.new .
 )
 
 ## Add a package description:
@@ -294,7 +292,7 @@ ${PRGNAME}-contrib: Packaged by Marco Antonio Frias B. (marcoantoniofrias@gmail.
 EOL
 
 cat > $OUTPUT/${PRGNAME}-contrib-${VERSION}-${ARCH}-${RELEASE}${BUILDTAG}.dep << EOL
-ossp-uuid, ${PRGNAME} >= ${VERSION}
+ossp-uuid, postgresql
 EOL
 
 ## Build the package:

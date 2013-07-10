@@ -1,0 +1,6 @@
+
+1.  Download the file ARCHIVE from HOMEPAGE and put it in the directory
+
+2.  Run package.SlackBuild to package it as an installable .txz package
+
+Enjoy!

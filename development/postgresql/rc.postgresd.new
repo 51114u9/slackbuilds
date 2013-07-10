@@ -26,22 +26,22 @@
 #
 # This script can be run directly from a root command shell, using:
 #
-#  # /etc/rc.d/rc.postgresql start   <- a new server is launched
-#  # /etc/rc.d/rc.postgresql stop    <- the server is shut down
-#  # /etc/rc.d/rc.postgresql restart <- executes a stop followed by a start
-#  # /etc/rc.d/rc.postgresql reload  <- reread config files
-#  # /etc/rc.d/rc.postgresql status  <- checks whether a server is running
+#  # /etc/rc.d/rc.postgresd start   <- a new server is launched
+#  # /etc/rc.d/rc.postgresd stop    <- the server is shut down
+#  # /etc/rc.d/rc.postgresd restart <- executes a stop followed by a start
+#  # /etc/rc.d/rc.postgresd reload  <- reread config files
+#  # /etc/rc.d/rc.postgresd status  <- checks whether a server is running
 #
 # For automatic startup, it should be added in /etc/rc.d/rc.local:
 #
-# if [ -x /etc/rc.d/rc.postgresql ]; then
-#   /etc/rc.d/rc.postgresql start
+# if [ -x /etc/rc.d/rc.postgresd ]; then
+#   /etc/rc.d/rc.postgresd start
 # fi
 #
 # For automatic shut down, it should be added in /etc/rc.d/rc.local_shutdown:
 #
-# if [ -x /etc/rc.d/rc.postgresql ]; then
-#   /etc/rc.d/rc.postgresql stop
+# if [ -x /etc/rc.d/rc.postgresd ]; then
+#   /etc/rc.d/rc.postgresd stop
 # fi
 #
 
@@ -49,71 +49,49 @@
 ## EDIT FROM HERE
 ##################
 
-# "postgres" home directory
-PGDIR="/var/lib/pgsql"
-
-# Data directory
-PGDATA="$PGDIR/data"
-
-# Who to run the postmaster as, usually "postgres" (NOT "root")
 PGUSER=postgres
-PGUID=28
-PGGID=28
+PGGROUP=postgres
+PGUID=209
+PGGID=209
 
-# Where to keep a log file
-PGLOG="$PGDIR/serverlog"
+PGHOME="/var/lib/postgres"
+PGDATA="$PGHOME/data"
+PGLOG="/var/log/postgres.log"
 
 #####################
 ## STOP EDITING HERE
 #####################
 
-# The path that is to be used for the script
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
-# What to user to create database cluster
 PGINITDB="/usr/bin/initdb"
-
-# What to use to start up the postmaster
-DAEMON="/usr/bin/postmaster"
-
-# What to use to shut down the postmaster
 PGCTL="/usr/bin/pg_ctl"
 
 check_env() {
 
-  # Only start if we can find the postmaster
-  if [ ! -x $DAEMON ]; then
-    echo "PostgreSQL is not installed correctly." >&2
-    exit 1
+  grep -q "^$PGGROUP:" /etc/group || groupadd -g $PGGID $PGGROUP || exit 1
+  grep -q "^$PGUSER:" /etc/passwd || useradd -u $PGUID -d $PGHOME -m -k /dev/null -g $PGGROUP $PGUSER || exit 1
+
+  if [ ! -d $PGHOME/ ]; then
+    echo -n "Creating PGHOME $PGHOME: "
+    mkdir $PGHOME && echo "ok" || exit 1
   fi
+  chown $PGUSER:$PGGROUP $PGHOME
+  chmod 700 $PGHOME
 
-  # Confirm that the postgres user and group exist
-  grep -q "^$PGUSER:" /etc/group || groupadd -g $PGGID $PGUSER || exit 1
-  grep -q "^$PGUSER:" /etc/passwd || useradd -d $PGDIR -c "PostgreSQL" -g $PGUSER -u $PGUID $PGUSER || exit 1
-
-  # Confirm that the postgres home directory ($PGDIR) exists
-  if [ ! -d $PGDIR/ ]; then
-    echo -n "Creating PGDIR $PGDIR: "
-    mkdir $PGDIR && echo "ok" || exit 1
-  fi
-  chown $PGUSER:$PGUSER $PGDIR/
-  chmod 750 $PGDIR/
-
-  # Check for a valid startup log file
   if [ ! -e "$PGLOG" ]; then
     touch "$PGLOG" || exit 1
   fi
-  chown $PGUSER:$PGUSER "$PGLOG"
-  chmod 700 "$PGLOG"
-  
-  # Check for a valid data ($PGDATA) directory
+  chown $PGUSER:$PGGROUP "$PGLOG"
+  chmod 600 "$PGLOG"
+
   if [ ! -f "$PGDATA/PG_VERSION" -o ! -d "$PGDATA/base" ]; then
 
     echo -n "Initializing a new PostgreSQL database cluster: "
     if [ ! -e "$PGDATA" ]; then
       mkdir -p "$PGDATA" || exit 1
     fi
-    chown $PGUSER:$PGUSER "$PGDATA"
+    chown $PGUSER:$PGGROUP "$PGDATA"
     chmod 700 "$PGDATA"
 
     su - $PGUSER -c "$PGINITDB --pgdata='$PGDATA'" >>$PGLOG 2>&1
@@ -129,7 +107,7 @@ check_env() {
 start() {
   check_env
   echo -n "Starting PostgreSQL Server: "
-  su - $PGUSER -c "$DAEMON -D '$PGDATA' &" >>$PGLOG 2>&1
+  su - $PGUSER -c "$PGCTL start -D '$PGDATA'" >>$PGLOG 2>&1
   [ $? -eq 0 ] && echo "ok" || echo "failed"
 }
 

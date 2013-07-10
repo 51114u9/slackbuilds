@@ -1,8 +1,7 @@
-diff --git a/Makefile.in b/Makefile.in
-index d28f4be..c2ba99d 100644
---- a/Makefile.in
-+++ b/Makefile.in
-@@ -62,13 +62,13 @@ PERL        = @PERL@
+diff -Nru uuid-1.6.2.orig/Makefile.in uuid-1.6.2/Makefile.in
+--- uuid-1.6.2.orig/Makefile.in	2008-03-08 14:31:40.000000000 -0400
++++ uuid-1.6.2/Makefile.in	2013-07-08 23:53:18.920083364 -0400
+@@ -62,13 +62,13 @@
  PHP         = @PHP@
  PG_CONFIG   = @PG_CONFIG@
  
@@ -19,11 +18,38 @@ index d28f4be..c2ba99d 100644
  CXX_OBJS    = uuid++.lo $(LIB_OBJS)
  
  PRG_NAME    = uuid
-diff --git a/perl/Makefile.PL b/perl/Makefile.PL
-index 92f4494..9c6fee6 100644
---- a/perl/Makefile.PL
-+++ b/perl/Makefile.PL
-@@ -33,9 +33,9 @@ use Config;
+@@ -112,15 +112,15 @@
+ 	@$(LIBTOOL) --mode=compile $(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $<
+ 
+ $(LIB_NAME): $(LIB_OBJS)
+-	@$(LIBTOOL) --mode=link $(CC) -o $(LIB_NAME) $(LIB_OBJS) -rpath $(libdir) \
++	@$(LIBTOOL) --mode=link $(CC) $(LDFLAGS) -o $(LIB_NAME) $(LIB_OBJS) -rpath $(libdir) \
+ 	    -version-info `$(SHTOOL) version -l c -d libtool $(S)/uuid_vers.h`
+ 
+ $(DCE_NAME): $(DCE_OBJS)
+-	@$(LIBTOOL) --mode=link $(CC) -o $(DCE_NAME) $(DCE_OBJS) -rpath $(libdir) \
++	@$(LIBTOOL) --mode=link $(CC) $(LDFLAGS) -o $(DCE_NAME) $(DCE_OBJS) -rpath $(libdir) \
+ 	    -version-info `$(SHTOOL) version -l c -d libtool $(S)/uuid_vers.h`
+ 
+ $(CXX_NAME): $(CXX_OBJS)
+-	@$(LIBTOOL) --mode=link $(CXX) -o $(CXX_NAME) $(CXX_OBJS) -rpath $(libdir) \
++	@$(LIBTOOL) --mode=link $(CXX) $(LDFLAGS) -o $(CXX_NAME) $(CXX_OBJS) -rpath $(libdir) \
+ 	    -version-info `$(SHTOOL) version -l c -d libtool $(S)/uuid_vers.h`
+ 
+ $(PRG_NAME): $(PRG_OBJS) $(LIB_NAME)
+@@ -253,7 +253,7 @@
+ 	-@if [ ".$(WITH_CXX)" = .yes ]; then \
+ 	    $(LIBTOOL) --mode=install $(SHTOOL) install -c -m 644 $(CXX_NAME) $(DESTDIR)$(libdir)/; \
+ 	fi
+-	@$(LIBTOOL) --mode=install $(SHTOOL) install -c -s -m 755 uuid $(DESTDIR)$(bindir)/
++	@$(LIBTOOL) --mode=install $(SHTOOL) install -c -m 755 uuid $(DESTDIR)$(bindir)/
+ 	$(SHTOOL) install -c -m 644 $(S)/uuid.1 $(DESTDIR)$(mandir)/man1/
+ 	-@if [ ".$(WITH_PERL)" = .yes ]; then \
+ 	    (cd $(S)/perl && $(MAKE) $(MFLAGS) install DESTDIR=$(DESTDIR)); \
+diff -Nru uuid-1.6.2.orig/perl/Makefile.PL uuid-1.6.2/perl/Makefile.PL
+--- uuid-1.6.2.orig/perl/Makefile.PL	2007-01-01 14:13:18.000000000 -0400
++++ uuid-1.6.2/perl/Makefile.PL	2013-07-09 00:52:44.243092677 -0400
+@@ -33,9 +33,9 @@
  use ExtUtils::MakeMaker;
  
  #   determine source directory
@@ -36,7 +62,7 @@ index 92f4494..9c6fee6 100644
  
  #   determine extra build options
  my $compat = 0;
-@@ -47,15 +47,15 @@ WriteMakefile(
+@@ -47,7 +47,7 @@
      VERSION_FROM      => 'uuid.pm',
      ABSTRACT_FROM     => 'uuid.pod',
      PREREQ_PM         => {},
@@ -45,34 +71,63 @@ index 92f4494..9c6fee6 100644
      DEFINE            => '',
      INC               => "-I. -I$srcdir",
      PM                => { 'uuid.pm'   => '$(INST_LIBDIR)/uuid.pm',
-                            'uuid.pod'  => '$(INST_LIBDIR)/uuid.pod',
-                            ($compat ? ('uuid_compat.pm'  => '$(INST_LIBDIR)/../Data/UUID.pm')  : ()),
-                            ($compat ? ('uuid_compat.pod' => '$(INST_LIBDIR)/../Data/UUID.pod') : ()), },
--    MAN3PODS          => { 'uuid.pod' => '$(INST_MAN3DIR)/OSSP::uuid.3',
--                           ($compat ? ('uuid_compat.pod' => '$(INST_MAN3DIR)/Data::UUID.3') : ()), },
-+    MAN3PODS          => { 'uuid.pod' => '$(INST_MAN3DIR)/OSSP::uuid.3pm',
-+                           ($compat ? ('uuid_compat.pod' => '$(INST_MAN3DIR)/Data::UUID.3pm') : ()), },
-     TYPEMAPS          => [ 'uuid.tm' ],
-     test              => { TESTS => 'uuid.ts' . ($compat ? ' uuid_compat.ts' : '') },
-     NO_META           => 1,
-diff --git a/php/config.m4 b/php/config.m4
-index 5091b96..969b457 100644
---- a/php/config.m4
-+++ b/php/config.m4
-@@ -34,7 +34,7 @@ if test "$PHP_UUID" != "no"; then
+diff -Nru uuid-1.6.2.orig/php/Makefile.local uuid-1.6.2/php/Makefile.local
+--- uuid-1.6.2.orig/php/Makefile.local	2007-01-01 14:13:30.000000000 -0400
++++ uuid-1.6.2/php/Makefile.local	2013-07-09 00:29:38.015089055 -0400
+@@ -42,7 +42,7 @@
+ 
+ test: build
+ 	@version=`$(PHP)-config --version | sed -e 's;^\([0-9]\).*$$;\1;'`; \
+-	$(PHP) -q -d "safe_mode=0" -d "extension_dir=./" uuid.ts $$version
++	$(PHP) -q -d "safe_mode=0" -d "extension_dir=./modules/" uuid.ts $$version
+ 
+ install: build
+ 	@version=`$(PHP)-config --version | sed -e 's;^\([0-9]\).*$$;\1;'`; extdir="$(EXTDIR)"; \
+diff -Nru uuid-1.6.2.orig/php/config.m4 uuid-1.6.2/php/config.m4
+--- uuid-1.6.2.orig/php/config.m4	2007-05-19 15:26:56.000000000 -0400
++++ uuid-1.6.2/php/config.m4	2013-07-09 00:25:27.507088401 -0400
+@@ -33,10 +33,10 @@
+ if test "$PHP_UUID" != "no"; then
      PHP_NEW_EXTENSION(uuid, uuid.c, $ext_shared)
      AC_DEFINE(HAVE_UUID, 1, [Have OSSP uuid library])
-     PHP_ADD_LIBPATH([..], )
+-    PHP_ADD_LIBPATH([..], )
 -    PHP_ADD_LIBRARY([uuid],, UUID_SHARED_LIBADD)
+-    PHP_ADD_INCLUDE([..])
 +    PHP_ADD_LIBRARY([ossp-uuid],, UUID_SHARED_LIBADD)
-     PHP_ADD_INCLUDE([..])
++    PHP_ADD_INCLUDE([../uuid-1.6.2])
      PHP_SUBST(UUID_SHARED_LIBADD)
++    LDFLAGS="$LDFLAGS -L../uuid-1.6.2/.libs"
  
-diff --git a/uuid-config.in b/uuid-config.in
-index 8d2a063..5b58812 100644
---- a/uuid-config.in
-+++ b/uuid-config.in
-@@ -121,7 +121,7 @@ do
+     dnl  avoid linking conflict with a potentially existing uuid_create(3) in libc
+     AC_CHECK_FUNC(uuid_create,[
+diff -Nru uuid-1.6.2.orig/php/uuid.c uuid-1.6.2/php/uuid.c
+--- uuid-1.6.2.orig/php/uuid.c	2007-01-01 14:35:57.000000000 -0400
++++ uuid-1.6.2/php/uuid.c	2013-07-09 00:27:27.492088714 -0400
+@@ -496,7 +496,7 @@
+ }
+ 
+ /* module function table */
+-static function_entry uuid_functions[] = {
++static zend_function_entry uuid_functions[] = {
+     PHP_FE(uuid_create,  NULL)
+     PHP_FE(uuid_destroy, NULL)
+     PHP_FE(uuid_clone,   NULL)
+diff -Nru uuid-1.6.2.orig/php/uuid.ts uuid-1.6.2/php/uuid.ts
+--- uuid-1.6.2.orig/php/uuid.ts	2007-01-01 14:13:33.000000000 -0400
++++ uuid-1.6.2/php/uuid.ts	2013-07-09 00:30:09.971089095 -0400
+@@ -36,7 +36,7 @@
+ 
+ print "++ loading DSO uuid.so (low-level API)\n";
+ if (!extension_loaded('uuid')) {
+-    dl('modules/uuid.so');
++    dl('uuid.so');
+ }
+ 
+ print "++ loading PHP uuid.php${php_version} (high-level API)\n";
+diff -Nru uuid-1.6.2.orig/uuid-config.in uuid-1.6.2/uuid-config.in
+--- uuid-1.6.2.orig/uuid-config.in	2008-03-07 06:49:59.000000000 -0400
++++ uuid-1.6.2/uuid-config.in	2013-07-08 23:57:07.572083978 -0400
+@@ -121,7 +121,7 @@
              output_extra="$output_extra $uuid_ldflags"
              ;;
          --libs)
@@ -81,11 +136,10 @@ index 8d2a063..5b58812 100644
              output_extra="$output_extra $uuid_libs"
              ;;
          * )
-diff --git a/uuid.pc.in b/uuid.pc.in
-index c76ad1e..de00c2f 100644
---- a/uuid.pc.in
-+++ b/uuid.pc.in
-@@ -36,7 +36,7 @@ Name: OSSP uuid
+diff -Nru uuid-1.6.2.orig/uuid.pc.in uuid-1.6.2/uuid.pc.in
+--- uuid-1.6.2.orig/uuid.pc.in	2008-03-07 06:49:59.000000000 -0400
++++ uuid-1.6.2/uuid.pc.in	2013-07-08 23:57:40.465084049 -0400
+@@ -36,7 +36,7 @@
  Description: Universally Unique Identifier (UUID) Library
  Version: @UUID_VERSION_RAW@
  URL: http://www.ossp.org/pkg/lib/uuid/
@@ -95,4 +149,3 @@ index c76ad1e..de00c2f 100644
 +Libs: -L${libdir} -lossp-uuid
  Libs.private: @LIBS@
  
--- 

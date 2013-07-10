@@ -7,5 +7,5 @@ Exec=josm
 Icon=josm
 Terminal=false
 Type=Application
-Categories=Geography;Education;Utility;
+Categories=Geography;Education
 MimeType=application/x-gpx+xml;application/x-osm+xml;application/xml;application/x-nmea;application/x-bzip-compressed-osm+xml;application/x-gzip-compressed-osm+xml;application/x-gzip-compressed-gpx+xml;

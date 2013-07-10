@@ -23,7 +23,7 @@
 ## Name, version and buildtag of the package
 PRGNAME=libevent
 VERSION=2.0.21
-RELEASE=1
+RELEASE=2
 BUILDTAG=mfb
 
 ## The documentation files:

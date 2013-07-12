@@ -1,6 +1,0 @@
-PKGNAME=rts_pstor
-VERSION=1.10
-LICENSE=GPL-2
-HOMEPAGE=http://www.realtek.com.tw/
-DOWNLOAD="http://www.realtek.com.tw/downloads/downloadsView.aspx?Langid=1&PNid=15&PFid=25&Level=4&Conn=3&DownTypeID=3&GetDown=false#2"
-MD5SUM=57bcf4081bdd2194d1f24c4573ee7293

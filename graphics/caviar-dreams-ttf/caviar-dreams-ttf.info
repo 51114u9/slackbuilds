@@ -1,7 +1,0 @@
-PKGNAME=caviar-dreams-ttf
-VERSION=20090702
-LICENSE=Nymphont_License
-HOMEPAGE=http://www.nymfont.com/
-DOWNLOAD="http://img.dafont.com/dl/?f=caviar_dreams"
-MD5SUM=0fc6ddd765d88d7e788dc9c2ad2be2ab
-REQUIRES=""

@@ -21,8 +21,8 @@
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ## Name, version and buildtag of the package
-PRGNAME=open-sans-ttf
-VERSION=20130712
+PRGNAME=quicksand-otf
+VERSION=20130713
 ARCH=noarch
 RELEASE=1
 BUILDTAG=mfb
@@ -38,7 +38,7 @@ TMP=${TMP:-/tmp/build}
 PKG=$TMP/package-${PRGNAME}
 OUTPUT=${OUTPUT:-/tmp}
 
-SOURCE="$SRCDIR/${PRGNAME}.zip"
+SOURCE="$SRCDIR/${PRGNAME}-${VERSION}.zip"
 SRCURL="$(grep DOWNLOAD ${PRGNAME}.info | cut -d = -f 2)"
 
 ##
@@ -95,8 +95,8 @@ chown -R root.root .
 echo -e "\nInstalling $PRGNAME...\n"
 sleep 1
 
-install -m 755 -d $PKG/usr/share/fonts/TTF
-install -m 644 *.ttf $PKG/usr/share/fonts/TTF
+install -m 755 -d $PKG/usr/share/fonts/OTF
+install -m 644 *.otf $PKG/usr/share/fonts/OTF
 
 ## Add documentation:
 mkdir -p $PKG/usr/doc/${PRGNAME}-${VERSION}

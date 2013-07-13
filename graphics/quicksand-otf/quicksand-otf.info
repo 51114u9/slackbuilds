@@ -1,0 +1,7 @@
+PKGNAME=quicksand
+VERSION=20130713
+LICENSE=SIL-OLF-1.1
+HOMEPAGE=http://www.andrewpaglinawan.com/#quicksand
+DOWNLOAD=http://www.fontsquirrel.com/fonts/download/Quicksand
+MD5SUM=ac218f30f92403ebd70edaf4ab47a948
+REQUIRES=""

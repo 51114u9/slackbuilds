@@ -1,0 +1,7 @@
+PKGNAME=xfce4-datetime-plugin
+VERSION=0.6.2
+LICENSE=GPL-2
+HOMEPAGE=http://goodies.xfce.org/projects/panel-plugins/xfce4-datetime-plugin
+DOWNLOAD=http://archive.xfce.org/src/panel-plugins/xfce4-datetime-plugin/0.6/xfce4-datetime-plugin-0.6.2.tar.bz2
+MD5SUM=fe604a251eadbc5b0f2b4737b85d92c8
+REQUIRES=""

@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Name=Eclipse Standard
+Comment=An open-source, platform-independent software framework
+Comment[es]=Una plataforma de software independiente de la plataforma y de código abierto
+Exec=eclipse
+Icon=eclipse
+Terminal=false
+Type=Application
+Categories=Qt;KDE;GNOME;Application;Development;
+MimeType=

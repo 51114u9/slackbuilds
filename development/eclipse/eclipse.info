@@ -1,0 +1,8 @@
+PKGNAME=eclipse
+VERSION=4.3.0
+LICENSE=EPL-1
+HOMEPAGE=http://www.eclipse.org/
+DOWNLOAD=http://download.eclipse.org/technology/epp/downloads/release/kepler/R/eclipse-standard-kepler-R-linux-gtk.tar.gz
+DOWNLOAD_64=http://download.eclipse.org/technology/epp/downloads/release/kepler/R/eclipse-standard-kepler-R-linux-gtk-x86_64.tar.gz
+MD5SUM=31abb5bba916b2ccd09cf24413b8586f
+MD5SUM_64=3b8f04931a58ea9b9c0a352f4d2196cf

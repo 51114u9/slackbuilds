@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright 2007-2012 Marco Antonio Frias B., Cochabamba, BO
+# Copyright 2007-2013 Marco Antonio Frias B., Cochabamba, BO
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
@@ -21,8 +21,10 @@
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ## Name, version and buildtag of the package
-PRGNAME=eclipse-SDK
-VERSION=3.7.2
+PRGNAME=eclipse
+SRCNAME=eclipse-standard
+VERSION=4.3.0
+SRCVERSION=kepler-R
 RELEASE=1
 BUILDTAG=mfb
 
@@ -48,9 +50,9 @@ if [ -z "$ARCH" ]; then
 fi
 
 if [ "$ARCH" == "x86_64" ]; then
-  SOURCE="$SRCDIR/${PRGNAME}-${VERSION}-linux-gtk-${ARCH}.tar.gz"
+  SOURCE="$SRCDIR/${SRCNAME}-${SRCVERSION}-linux-gtk-${ARCH}.tar.gz"
 else
-  SOURCE="$SRCDIR/${PRGNAME}-${VERSION}-linux-gtk.tar.gz"
+  SOURCE="$SRCDIR/${SRCNAME}-${SRCVERSION}-linux-gtk.tar.gz"
 fi
 
 if [ "$ARCH" == "x86_64" ]; then
@@ -106,7 +108,7 @@ echo -e "\nExtracting the source archive(s) for $PRGNAME...\n"
 sleep 1
 
 tar -xzvf ${SOURCE}
-cd eclipse
+cd ${PRGNAME}
 find . \( -perm 777 -o -perm 775 -o -perm 711 -o -perm 555 -o -perm 511 \) -exec chmod 755 {} \;
 find . \( -perm 666 -o -perm 664 -o -perm 600 -o -perm 444 -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 chown -R root.root .
@@ -114,29 +116,24 @@ chown -R root.root .
 echo -e "\nInstalling $PRGNAME...\n"
 sleep 1
 
-## Creating dir structure:
-mkdir -p $PKG/usr/bin
-mkdir -p $PKG/usr/share/eclipse-SDK
-mkdir -p $PKG/usr/share/applications
-mkdir -p $PKG/usr/share/icons/hicolor/{scalable,16x16,22x22,24x24,32x32,48x48,64x64,128x128}/apps
+install -m 755 -d $PKG/usr/bin
+install -m 755 -d $PKG/usr/share/eclipse
+install -m 755 -d $PKG/usr/share/applications
+install -m 755 -d $PKG/usr/share/icons/hicolor/{scalable,16x16,22x22,24x24,32x32,48x48,64x64,128x128}/apps
 
-## Copying files:
-mv * $PKG/usr/share/eclipse-SDK
-cd $PKG/usr/share/eclipse-SDK
-( cd $PKG/usr/bin ; ln -sf /usr/share/eclipse-SDK/eclipse eclipse-SDK )
+cp -a * $PKG/usr/share/eclipse
+ln -sf /usr/share/eclipse/eclipse $PKG/usr/bin/eclipse
 install -m 644 $SRCDIR/eclipse.desktop $PKG/usr/share/applications
 install -m 644 $SRCDIR/eclipse.svg $PKG/usr/share/icons/hicolor/scalable/apps
 for i in 16 22 24 32 48 64 128; do
   ( cd $PKG/usr/share/icons/hicolor/${i}x${i}/apps ; /usr/bin/rsvg-convert -w ${i} -h ${i} -f png -o eclipse.png $SRCDIR/eclipse.svg )
 done
-mv eclipse.ini eclipse.ini.new
-mv configuration/config.ini configuration/config.ini.new
+mv -v $PKG/usr/share/eclipse/eclipse.ini{,.new}
+mv -v $PKG/usr/share/eclipse/configuration/config.ini{,.new}
 
 ## Add documentation:
 mkdir -p $PKG/usr/doc/${PRGNAME}-${VERSION}
 cp -pR $DOCFILES $PKG/usr/doc/${PRGNAME}-${VERSION} || true
-lynx -dump epl-v10.html > $PKG/usr/doc/${PRGNAME}-${VERSION}/LICENSE
-lynx -dump readme/readme_eclipse.html > $PKG/usr/doc/${PRGNAME}-${VERSION}/README
 find $PKG/usr/doc/${PRGNAME}-${VERSION} -type d -exec chmod 755 {} \;
 find $PKG/usr/doc/${PRGNAME}-${VERSION} -type f -exec chmod 644 {} \;
 chown -R root.root $PKG/usr/doc/${PRGNAME}-${VERSION}
@@ -156,7 +153,7 @@ install -m 644 $SRCDIR/slack-desc .
 install -m 644 $SRCDIR/doinst.sh .
 install -m 644 $SRCDIR/${PRGNAME}.info .
 install -m 644 $SRCDIR/${PRGNAME}.SlackBuild .
-install -m 644 $SRCDIR/eclipse-SDK.desktop .
+install -m 644 $SRCDIR/eclipse.desktop .
 install -m 644 $SRCDIR/eclipse.svg .
 )
 
@@ -166,7 +163,7 @@ install -m 644 $SRCDIR/doinst.sh $PKG/install
 install -m 644 $SRCDIR/slack-desc $PKG/install
 
 cat > $OUTPUT/${PRGNAME}-${VERSION}-${ARCH}-${RELEASE}${BUILDTAG}.dep << EOL
-jdk >= 6
+jre|openjre|jdk|openjdk
 EOL
 
 ## Build the package:

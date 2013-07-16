@@ -1,8 +1,0 @@
-PKGNAME=eclipse-SDK
-VERSION=3.7.2
-LICENSE=EPL-1
-HOMEPAGE=http://www.eclipse.org/eclipse
-DOWNLOAD=http://download.eclipse.org/eclipse/downloads/drops/R-3.7.2-201202080800/eclipse-SDK-3.7.2-linux-gtk.tar.gz
-DOWNLOAD_64=http://download.eclipse.org/eclipse/downloads/drops/R-3.7.2-201202080800/eclipse-SDK-3.7.2-linux-gtk-x86_64.tar.gz
-MD5SUM=79b90faa1ee6e7af1910c3a5077b594f
-MD5SUM_64=6a0fd32cb6a986032a67defab3753476

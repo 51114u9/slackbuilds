@@ -1,6 +1,7 @@
 PKGNAME=apache-tomcat
-VERSION=7.0.35
+VERSION=7.0.42
 LICENSE=Apache-2
 HOMEPAGE=http://tomcat.apache.org/
-DOWNLOAD=http://apache.osuosl.org/tomcat/tomcat-7/v7.0.35/bin/apache-tomcat-7.0.35.tar.gz
-MD5SUM=b096abcb23d3d5bb110f7d52a53fb9a8
+DOWNLOAD=http://apache.osuosl.org/tomcat/tomcat-7/v7.0.42/bin/apache-tomcat-7.0.42.tar.gz
+MD5SUM=1dd9abf3ae5154677e55a5d4e1fae5ed
+REQUIRES="jre|openjre|jdk|openjdk"

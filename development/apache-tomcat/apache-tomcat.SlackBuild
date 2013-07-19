@@ -20,16 +20,9 @@
 #  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-## Set initial variables:
-
-# copy docs?
-USE_DOCS=${USE_DOCS:-"YES"}
-# copy collections of examples?
-USE_EXAMPLES=${USE_EXAMPLES:-"YES"}
-
 ## Name, version and buildtag of the package
 PRGNAME=apache-tomcat
-VERSION=7.0.35
+VERSION=7.0.42
 ARCH=noarch
 RELEASE=1
 BUILDTAG=mfb
@@ -53,10 +46,6 @@ SRCURL="$(grep DOWNLOAD ${PRGNAME}.info | cut -d = -f 2)"
 ## --- with a little luck, you won't have to edit below this point ---
 ##
 
-## I don't care if the user says "no", "NO", "yes" or "YES":
-USE_DOCS=$(echo $USE_DOCS | tr 'a-z' 'A-Z')
-USE_EXAMPLES=$(echo $USE_EXAMPLES | tr 'a-z' 'A-Z')
-
 ## Exit the script on errors:
 set -e
 trap 'echo -e "\n$0 FAILED at line ${LINENO}" | tee $TMP/error-${PRGNAME}.log' ERR
@@ -72,6 +61,7 @@ mkdir -p $PKG                # place for the package to be built
 
 rm -rf $PKG/*                # always erase old package's contents
 rm -rf $TMP/tmp-${PRGNAME}/* # remove the remnants of previous build
+rm -rf $TMP/*-${PRGNAME}.log # remove log files
 
 ## Source file availability:
 if ! [ -f ${SOURCE} ]; then
@@ -99,71 +89,52 @@ echo -e "\nExtracting the source archive(s) for $PRGNAME...\n"
 sleep 1
 
 tar -xzvf ${SOURCE}
-mv ${PRGNAME}-${VERSION} ${PRGNAME}
-cd ${PRGNAME}
+cd ${PRGNAME}-${VERSION}
 find . \( -perm 777 -o -perm 775 -o -perm 711 -o -perm 555 -o -perm 511 \) -exec chmod 755 {} \;
 find . \( -perm 666 -o -perm 664 -o -perm 600 -o -perm 444 -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 chown -R root.root .
 
+echo -e "\nApply patches...\n"
+sleep 1
+
+## Adding default roles:
+patch -p1 --verbose < \
+    $SRCDIR/${PRGNAME}_users.patch 2>&1 | tee $TMP/patch-${PRGNAME}.log
+
 echo -e "\nInstalling $PRGNAME...\n"
 sleep 1
 
-## Removing unnecessary (windows and compress) files:
-rm -rf bin/*.{bat,gz}
-rm -rf temp/safeToDelete.tmp
+install -m 755 -d $PKG/etc/{apache-tomcat,profile.d,rc.d}
+install -m 755 -d $PKG/usr/share/apache-tomcat/{bin,lib}
+install -m 755 -d $PKG/var/{cache,lib,log,tmp}/apache-tomcat
 
-## Creating dir structure:
-mkdir -p $PKG/etc/apache-tomcat
-mkdir -p $PKG/etc/{rc.d,profile.d}
-mkdir -p $PKG/usr/share/apache-tomcat
-mkdir -p $PKG/var/{cache,lib,log,tmp}/apache-tomcat
-
-## Copying files:
-cp -pR bin $PKG/usr/share/apache-tomcat
-find $PKG/usr/share/apache-tomcat/bin -type f -exec chmod 644 {} \;
-find $PKG/usr/share/apache-tomcat/bin -type f -name '*.sh' -exec chmod 755 {} \;
-
-cp -pR conf/* $PKG/etc/apache-tomcat
-for configfile in $PKG/etc/apache-tomcat/*; do mv $configfile $configfile.new; done
-find $PKG/etc/apache-tomcat -type f -exec chmod 644 {} \;
-
-install -m 644 ${SRCDIR}/rc.tomcat.new $PKG/etc/rc.d
+install -m 660 -p conf/* $PKG/etc/apache-tomcat
+for configfile in $PKG/etc/apache-tomcat/*; do mv -v $configfile{,.new}; done
+install -m 660 -p $SRCDIR/tomcat-java.conf.new $PKG/etc/apache-tomcat
 
 cat > $PKG/etc/profile.d/catalina.csh << EOL
 #!/bin/csh
 setenv CATALINA_HOME /usr/share/apache-tomcat
 EOL
-
 cat > $PKG/etc/profile.d/catalina.sh << EOL
 #!/bin/sh
 export CATALINA_HOME=/usr/share/apache-tomcat
 EOL
+chmod 755 $PKG/etc/profile.d/*
+install -m 644 -p ${SRCDIR}/rc.tomcatd.new $PKG/etc/rc.d
 
-find $PKG/etc/profile.d -type f -exec chmod 755 {} \;
+install -m 644 -p bin/*.{jar,xml} $PKG/usr/share/apache-tomcat/bin
+rm -f $PKG/usr/share/apache-tomcat/bin/commons-daemon.jar
+install -m 744 -p bin/*.sh $PKG/usr/share/apache-tomcat/bin
+install -m 644 -p lib/*.jar $PKG/usr/share/apache-tomcat/lib
 
-cp -pR lib $PKG/usr/share/apache-tomcat
-find $PKG/usr/share/apache-tomcat/lib -type f -exec chmod 644 {} \;
+cp -a webapps/* $PKG/var/lib/apache-tomcat
 
-cp -pR webapps/* $PKG/var/lib/apache-tomcat
-find $PKG/var/lib/apache-tomcat -type d -exec chmod 755 {} \;
-find $PKG/var/lib/apache-tomcat -type f -exec chmod 644 {} \;
-
-## Remove the documentation if we are allowing it:
-if [ "${USE_DOCS}" == "NO" ]; then
-  rm -rf $PKG/var/lib/apache-tomcat/docs
-fi
-
-## Remove the examples if we are allowing it:
-if [ "${USE_EXAMPLES}" == "NO" ]; then
-  rm -rf $PKG/var/lib/apache-tomcat/examples
-fi
-
-## Linking (symlink) the directories:
-( cd $PKG/usr/share/apache-tomcat ; ln -sf /etc/apache-tomcat conf )
-( cd $PKG/usr/share/apache-tomcat ; ln -sf /var/log/apache-tomcat logs )
-( cd $PKG/usr/share/apache-tomcat ; ln -sf /var/tmp/apache-tomcat temp )
-( cd $PKG/usr/share/apache-tomcat ; ln -sf /var/lib/apache-tomcat webapps )
-( cd $PKG/usr/share/apache-tomcat ; ln -sf /var/cache/apache-tomcat work )
+ln -s /etc/apache-tomcat $PKG/usr/share/apache-tomcat/conf
+ln -s /var/log/apache-tomcat $PKG/usr/share/apache-tomcat/logs
+ln -s /var/tmp/apache-tomcat $PKG/usr/share/apache-tomcat/temp
+ln -s /var/lib/apache-tomcat $PKG/usr/share/apache-tomcat/webapps
+ln -s /var/cache/apache-tomcat $PKG/usr/share/apache-tomcat/work
 
 ## Add documentation:
 mkdir -p $PKG/usr/doc/${PRGNAME}-${VERSION}
@@ -182,9 +153,10 @@ install -m 644 $SRCDIR/ChangeLog .
 install -m 644 $SRCDIR/slack-desc .
 install -m 644 $SRCDIR/doinst.sh .
 install -m 644 $SRCDIR/${PRGNAME}.info .
+install -m 644 $SRCDIR/${PRGNAME}_*.patch .
 install -m 644 $SRCDIR/${PRGNAME}.SlackBuild .
 install -m 644 $SRCDIR/*.Slackware .
-install -m 644 $SRCDIR/rc.tomcat.new .
+install -m 644 $SRCDIR/*.new .
 )
 
 ## Add a package description:
@@ -193,7 +165,7 @@ install -m 644 $SRCDIR/doinst.sh $PKG/install
 install -m 644 $SRCDIR/slack-desc $PKG/install
 
 cat > $OUTPUT/${PRGNAME}-${VERSION}-${ARCH}-${RELEASE}${BUILDTAG}.dep << EOL
-jre >= 6 | jdk >= 6
+jre|openjre|jdk|openjdk
 EOL
 
 cat > $OUTPUT/${PRGNAME}-${VERSION}-${ARCH}-${RELEASE}${BUILDTAG}.sug << EOL

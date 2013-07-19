@@ -13,30 +13,31 @@ config() {
 }
 
 ## List of conf files to check
+config etc/apache-tomcat/context.xml.new
+config etc/apache-tomcat/logging.properties.new
 config etc/apache-tomcat/catalina.policy.new
 config etc/apache-tomcat/catalina.properties.new
-config etc/apache-tomcat/logging.properties.new
-config etc/apache-tomcat/context.xml.new
 config etc/apache-tomcat/server.xml.new
+config etc/apache-tomcat/tomcat-java.conf.new
 config etc/apache-tomcat/tomcat-users.xml.new
 config etc/apache-tomcat/web.xml.new
-config etc/rc.d/rc.tomcat.new
+config etc/rc.d/rc.tomcatd.new
 
 ## Check if group and/or user exists
-check_tomcat_env() {
-  def_uid=8080
-  def_gid=8080
-
+check_env() {
   TOMCAT_USER=tomcat
+  TOMCAT_GROUP=tomcat
+  TOMCAT_UID=232
+  TOMCAT_GID=232
   TOMCAT_HOME="/usr/share/apache-tomcat"
 
-  # Confirm that the 'tomcat' user and group exist
-  grep -q "^$TOMCAT_USER:" /etc/group || groupadd -g $def_gid $TOMCAT_USER || exit 1
-  grep -q "^$TOMCAT_USER:" /etc/passwd || useradd -c "Apache Tomcat" -d $TOMCAT_HOME -g $TOMCAT_USER -u $def_uid $TOMCAT_USER || exit 1
+  grep -q "^$TOMCAT_GROUP:" /etc/group || groupadd -g $TOMCAT_GID $TOMCAT_GROUP || exit 1
+  grep -q "^$TOMCAT_USER:" /etc/passwd || useradd -u $TOMCAT_UID -d $TOMCAT_HOME -m -k /dev/null -g $TOMCAT_GROUP $TOMCAT_USER || exit 1
 }
 
-check_tomcat_env
+check_env
 
+chmod 0744 /usr/share/apache-tomcat/bin/*.sh
 chmod 0700 /var/tmp/apache-tomcat
 
 chown -fR tomcat.tomcat /etc/apache-tomcat

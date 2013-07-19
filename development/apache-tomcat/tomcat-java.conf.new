@@ -1,0 +1,12 @@
+
+# Initial size of memory allocation pool
+MMIN="512m"
+
+# Maximum size of memory allocation pool
+MMAX="1024m"
+
+# Maximum amount of heap used for permanent generation
+MAXPERM="512m"
+
+# Thread stack size
+STACK="256k"

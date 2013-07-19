@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright 2007-2012 Marco Antonio Frias B., Cochabamba, BO
+# Copyright 2007-2013 Marco Antonio Frias B., Cochabamba, BO
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
@@ -24,28 +24,50 @@
 #
 # This script can be run directly from a root command shell, using:
 #
-# # /etc/rc.d/rc.tomcat start
-# or
-# # /etc/rc.d/rc.tomcat stop
+#  # /etc/rc.d/rc.tomcatd start   <- a new server is launched
+#  # /etc/rc.d/rc.tomcatd stop    <- the server is shut down
+#  # /etc/rc.d/rc.tomcatd restart <- executes a stop followed by a start
+#  # /etc/rc.d/rc.tomcatd status  <- checks whether a server is running
 #
-# For automatic startup, it should be added to /etc/rc.d/rc.local. A sample
-# startup line:
+# For automatic startup, it should be added in /etc/rc.d/rc.local:
 #
-# if [ -x /etc/rc.d/rc.tomcat ]; then
-#   /etc/rc.d/rc.tomcat start
+# if [ -x /etc/rc.d/rc.tomcatd ]; then
+#   /etc/rc.d/rc.tomcatd start
 # fi
 #
-# For automatic shutdown, it should be added to /etc/rc.d/rc.local_shutdown. A
-# sample startup line:
+# For automatic shut down, it should be added in /etc/rc.d/rc.local_shutdown:
 #
-# if [ -x /etc/rc.d/rc.tomcat ]; then
-#   /etc/rc.d/rc.tomcat stop
+# if [ -x /etc/rc.d/rc.tomcatd ]; then
+#   /etc/rc.d/rc.tomcatd stop
 # fi
 #
 
-# Tuning the JVM --> Read README.Slackware
-#CATALINA_OPTS="-Xms50m -Xmx1024m -XX:PermSize=64m -XX:MaxPermSize=256m"
-CATALINA_OPTS=""
+##################
+## EDIT FROM HERE
+##################
+
+TOMCAT_USER=tomcat
+TOMCAT_GROUP=tomcat
+TOMCAT_UID=232
+TOMCAT_GID=232
+
+TOMCAT_HOME="/usr/share/apache-tomcat"
+TOMCAT_LOG="/var/log/apache-tomcat/server_`date +%F`.log"
+TOMCAT_PID="/var/run/apache-tomcat.pid"
+
+#####################
+## STOP EDITING HERE
+#####################
+
+. /etc/apache-tomcat/tomcat-java.conf
+
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+DAEMON_START="$TOMCAT_HOME/bin/startup.sh"
+DAEMON_STOP="$TOMCAT_HOME/bin/shutdown.sh"
+PID=-1
+
+CATALINA_OPTS="-Xms$MMIN -Xmx$MMAX -XX:MaxPermSize=$MAXPERM -Xss$STACK"
 
 case "$( uname -m )" in
   i[3456]86) LIBDIRSUFFIX=""
@@ -54,58 +76,31 @@ case "$( uname -m )" in
              ;;
 esac
 
-PATH="/bin:/usr/bin:/sbin:/usr/sbin"
-
-TOMCAT_HOME="/usr/share/apache-tomcat"
-TOMCAT_USER=tomcat
-TOMCAT_LOG="/var/log/apache-tomcat/server_`date +%F`.log"
-
-DAEMON_START="$TOMCAT_HOME/bin/startup.sh"
-DAEMON_STOP="$TOMCAT_HOME/bin/shutdown.sh"
-
-PIDFILE="/var/run/apache-tomcat.pid"
-PID=-1
-
-# Only start if we can find the daemon
-if [ ! -x $DAEMON_START ] || [ ! -x $DAEMON_STOP ]; then
-  echo "Apache Tomcat is not installed correctly." >&2
-  exit 1
-else
-  export PATH
-fi
-
 check_run() {
-  if [ -f "$PIDFILE" ]; then
-    read LINE < "$PIDFILE"
+  if [ -f "$TOMCAT_PID" ]; then
+    read LINE < "$TOMCAT_PID"
     [ -z "${LINE//[0-9]/}" -a -d "/proc/$LINE" ] && PID="$LINE"
     if [ -n "$PID" ]; then
       return 0
     fi
-    return 1 # Apache Tomcat is dead and /var/run pid file exists
+    return 1
   fi
-  return 3 # Apache Tomcat is not running
+  return 3
 }
 
-check_tomcat_env() {
-  def_uid=8080
-  def_gid=8080
+check_env() {
+  grep -q "^$TOMCAT_GROUP:" /etc/group || groupadd -g $TOMCAT_GID $TOMCAT_GROUP || exit 1
+  grep -q "^$TOMCAT_USER:" /etc/passwd || useradd -u $TOMCAT_UID -d $TOMCAT_HOME -m -k /dev/null -g $TOMCAT_GROUP $TOMCAT_USER || exit 1	
 
-  # Confirm that the 'tomcat' user and group exist
-  grep -q "^$TOMCAT_USER:" /etc/group || groupadd -g $def_gid $TOMCAT_USER || exit 1
-  grep -q "^$TOMCAT_USER:" /etc/passwd || useradd -c "Apache Tomcat" -d $TOMCAT_HOME -g $TOMCAT_USER -u $def_uid $TOMCAT_USER || exit 1
-
-  # Confirm that log file exists
   if [ ! -e $TOMCAT_LOG ]; then
-    touch $TOMCAT_LOG
-    chown $TOMCAT_USER.$TOMCAT_USER $TOMCAT_LOG
-    chmod go-rwx $TOMCAT_LOG
+    touch "$TOMCAT_LOG" || exit 1
   fi
+  chown $TOMCAT_USER.$TOMCAT_GROUP "$TOMCAT_LOG"
+  chmod 600 "$TOMCAT_LOG"
 }
 
 start() {
-  # See if it's already running. Look *only* at the pid file
   check_run
-
   case $? in
    0)
     echo "Apache Tomcat (pid $PID) is running..."
@@ -117,7 +112,7 @@ start() {
     ;;
   esac
 
-  check_tomcat_env
+  check_env
 
   echo "" >> $TOMCAT_LOG
   echo "Starting Apache Tomcat Server at `date +%X`" >> $TOMCAT_LOG
@@ -130,16 +125,14 @@ start() {
     sleep 6
     echo "ok"
     PID="$(ps ax --width=1000 | grep "[o]rg.apache.catalina.startup.Bootstrap start" | awk '{print $1}')"
-    echo "$PID" > $PIDFILE
+    echo "$PID" > $TOMCAT_PID
   else
     echo "failed"
   fi
 }
 
 stop() {
-  # See if it's already running. Look *only* at the pid file
   check_run
-
   case $? in
    1)
     echo "Apache Tomcat is dead but pid file exists..."
@@ -151,7 +144,7 @@ stop() {
     ;;
   esac
 
-  check_tomcat_env
+  check_env
 
   echo "" >> $TOMCAT_LOG
   echo "Stopping Apache Tomcat Server at `date +%X`" >> $TOMCAT_LOG
@@ -163,7 +156,7 @@ stop() {
   if [ $? -eq 0 ]; then
     sleep 6
     echo "ok"
-    rm -rf $PIDFILE
+    rm -rf $TOMCAT_PID
   else
     echo "failed"
   fi
@@ -176,9 +169,7 @@ restart() {
 }
 
 status() {
-  # See if it's already running. Look *only* at the pid file
   check_run
-
   case "$?" in
    0)
     echo "Apache Tomcat (pid $PID) is running..."
@@ -195,25 +186,43 @@ status() {
   esac
 }
 
+version() {
+  # Make sure prerequisite environment variables are set
+  if [ -z "$JAVA_HOME" -a -z "$JRE_HOME" ]; then
+    echo "Neither the JAVA_HOME nor the JRE_HOME environment variable is defined"
+    echo "At least one of these environment variable is needed to run this program"
+    exit 1
+  fi
+
+  if [ -z "$JRE_HOME" ]; then
+    JRE_HOME="$JAVA_HOME"
+  fi
+
+  $JRE_HOME/bin/java -classpath $TOMCAT_HOME/lib/catalina.jar \
+    org.apache.catalina.util.ServerInfo
+}
+
 # Parse command line parameters
 case $1 in
-start)
-  start
-  ;;
-stop)
-  stop
-  ;;
-restart)
-  restart
-  ;;
-status)
-  status
-  ;;
-*)
-  # Print help
-  echo "Usage: $0 {start|stop|restart|status}" 1>&2
-  exit 1
-  ;;
+  start)
+    start
+    ;;
+  stop)
+    stop
+    ;;
+  restart)
+    restart
+    ;;
+  status)
+    status
+    ;;
+  version)
+    version
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart|status|version}" 1>&2
+    exit 1
+    ;;
 esac
 
 exit 0

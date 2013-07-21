@@ -1,0 +1,7 @@
+PKGNAME=font-manager
+VERSION=0.5.7
+LICENSE=GPL-3
+HOMEPAGE=http://code.google.com/p/font-manager/
+DOWNLOAD=http://font-manager.googlecode.com/files/font-manager-0.5.7.tar.bz2
+MD5SUM=7cd3b635eaddcb84a8b31509880510ed
+REQUIRES=""

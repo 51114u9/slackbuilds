@@ -1,0 +1,7 @@
+PKGNAME=easytag
+VERSION=2.1.8
+LICENSE=GPL-2
+HOMEPAGE=https://projects.gnome.org/easytag/
+DOWNLOAD=http://download.gnome.org/sources/easytag/2.1/easytag-2.1.8.tar.xz
+MD5SUM=5eb6ae2dc7f6d6ecbf7ea6ba230c7ea1
+REQUIRES="id3lib"

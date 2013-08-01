@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright 2012 Marco Antonio Frias B., Cochabamba, BO
+# Copyright 2012-2013 Marco Antonio Frias B., Cochabamba, BO
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
@@ -22,7 +22,7 @@
 
 ## Name, version and buildtag of the package
 PRGNAME=stellarium
-VERSION=0.11.4a
+VERSION=0.12.1
 RELEASE=1
 BUILDTAG=mfb
 
@@ -116,10 +116,17 @@ echo -e "\nExtracting the source archive(s) for $PRGNAME...\n"
 sleep 1
 
 tar -xzvf ${SOURCE}
-cd ${PRGNAME}-$(echo ${VERSION} | sed "s/\([0-9]*\).*\.\([0-9]*\).*\.\([0-9]*\).*/\1.\2.\3/g")
+cd ${PRGNAME}-${VERSION}
 find . \( -perm 777 -o -perm 775 -o -perm 711 -o -perm 555 -o -perm 511 \) -exec chmod 755 {} \;
 find . \( -perm 666 -o -perm 664 -o -perm 600 -o -perm 444 -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 chown -R root.root .
+
+echo -e "\nApply patches...\n"
+sleep 1
+
+## Add comments for spanish:
+patch -b -p1 --verbose < \
+    $SRCDIR/${PRGNAME}_desktop.patch 2>&1 | tee $TMP/patch-${PRGNAME}.log
 
 echo -e "\nBuilding $PRGNAME...\n"
 sleep 1
@@ -134,10 +141,6 @@ cmake \
     .. \
     2>&1 | tee $TMP/configure-${PRGNAME}.log
 
-## Patch that fixes the error generating ui_ObservabilityDialog.h
-## See: https://answers.launchpad.net/stellarium/+question/214609
-install -m 644 $SRCDIR/ui_ObservabilityDialog.h plugins/Observability/src
-
 make -j$NUMCPU 2>&1 | tee $TMP/make-${PRGNAME}.log
 
 echo -e "\nInstalling $PRGNAME...\n"
@@ -146,11 +149,6 @@ sleep 1
 make DESTDIR=$PKG install 2>&1 | tee $TMP/install-${PRGNAME}.log
 
 cd -
-
-## Replacing files:
-install -m 644 $SRCDIR/stellarium.desktop $PKG/usr/share/applications
-
-## Moving files:
 mv $PKG/usr/share/man $PKG/usr
 
 ## Add documentation:
@@ -181,9 +179,8 @@ install -m 644 $SRCDIR/ChangeLog .
 install -m 644 $SRCDIR/slack-desc .
 install -m 644 $SRCDIR/doinst.sh .
 install -m 644 $SRCDIR/${PRGNAME}.info .
+install -m 644 $SRCDIR/${PRGNAME}_*.patch .
 install -m 644 $SRCDIR/${PRGNAME}.SlackBuild .
-install -m 644 $SRCDIR/stellarium.desktop .
-install -m 644 $SRCDIR/*.h .
 )
 
 ## Add a package description:

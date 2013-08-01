@@ -1,6 +1,7 @@
 PKGNAME=stellarium
-VERSION=0.11.4a
+VERSION=0.12.1
 LICENSE=GPL-2
 HOMEPAGE=http://www.stellarium.org/
-DOWNLOAD=http://downloads.sourceforge.net/stellarium/stellarium-0.11.4a.tar.gz
-MD5SUM=0ad79f6188fc393b936d37d50054e5ab
+DOWNLOAD=http://downloads.sourceforge.net/stellarium/stellarium-0.12.1.tar.gz
+MD5SUM=59ecd6cefed44909b4cd77e51d97583a
+REQUIRES=""

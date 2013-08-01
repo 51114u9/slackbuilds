@@ -1,0 +1,19 @@
+diff -Nru stellarium-0.12.1.orig/data/stellarium.desktop stellarium-0.12.1/data/stellarium.desktop
+--- stellarium-0.12.1.orig/data/stellarium.desktop	2013-03-26 06:44:46.000000000 -0400
++++ stellarium-0.12.1/data/stellarium.desktop	2013-07-28 19:37:58.667081047 -0400
+@@ -3,6 +3,7 @@
+ Type=Application
+ Name=Stellarium
+ GenericName=Desktop planetarium
++GenericName[es]=Planetario de escritorio
+ GenericName[ru]=Настольный планетарий
+ Exec=stellarium
+ Icon=stellarium
+@@ -10,6 +11,7 @@
+ Terminal=false
+ Categories=Astronomy;Education;Science;
+ Comment=Planetarium
++Comment[es]=Planetario
+ Comment[fr]=Planétarium
+ Comment[ru]=Планетарий
+ 

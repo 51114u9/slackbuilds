@@ -1,0 +1,6 @@
+
+# Initial size of memory allocation pool
+MMIN="64m"
+
+# Maximum size of memory allocation pool
+MMAX="512m"

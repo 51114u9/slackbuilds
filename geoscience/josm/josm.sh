@@ -20,6 +20,8 @@
 #  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+. /etc/josm-java.conf
+
 # Make sure prerequisite environment variables are set
 if [ -z "$JAVA_HOME" -a -z "$JRE_HOME" ]; then
   echo "Neither the JAVA_HOME nor the JRE_HOME environment variable is defined"
@@ -38,4 +40,4 @@ RUNJAVA="$JRE_HOME"/bin/java
 APP_HOME=/usr/share/josm
 
 # Execute
-$RUNJAVA -Xms64M -Xmx512M -jar $APP_HOME/@JARNAME@.jar "$@"
+$RUNJAVA -Xms${MMIN} -Xmx${MMAX} -jar $APP_HOME/josm.jar "$@"

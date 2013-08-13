@@ -3,4 +3,5 @@ VERSION=1.4.4
 LICENSE=GPL-2
 HOMEPAGE=http://www.gpsbabel.org/
 DOWNLOAD=http://www.gpsbabel.org/download.html
-MD5SUM=
+MD5SUM=6c4c8f0cb9fcf9f8302585148878f174
+REQUIRES=""

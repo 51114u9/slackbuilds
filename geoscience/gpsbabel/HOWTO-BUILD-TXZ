@@ -1,0 +1,7 @@
+
+1.  Download the file gpsbabel-*.tar.gz from http://www.gpsbabel.org/download.html
+    and put it in the directory
+
+2.  Run gpsbabel.SlackBuild to package it as an installable .txz package
+
+Enjoy!

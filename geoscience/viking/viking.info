@@ -1,6 +1,7 @@
 PKGNAME=viking
-VERSION=1.3.2.1
+VERSION=1.4.2
 LICENSE=GPL-2
 HOMEPAGE=http://viking.sourceforge.net/
-DOWNLOAD=http://downloads.sourceforge.net/viking/viking-1.3.2.1.tar.gz
-MD5SUM=9ee56be2c9b930e896a96f31f6095a88
+DOWNLOAD=http://downloads.sourceforge.net/viking/viking-1.4.2.tar.bz2
+MD5SUM=276bf2a6db3b26c8d0005d8b07438d82
+REQUIRES="gpsd"

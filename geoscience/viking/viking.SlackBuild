@@ -121,6 +121,13 @@ find . \( -perm 777 -o -perm 775 -o -perm 711 -o -perm 555 -o -perm 511 \) -exec
 find . \( -perm 666 -o -perm 664 -o -perm 600 -o -perm 444 -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 chown -R root.root .
 
+echo -e "\nApply patches...\n"
+sleep 1
+
+## Apply patches first:
+echo "sed -i 's@Geography;@Geography;Education;@' src/viking.desktop.in"
+sed -i "s@Geography;@Geography;Education;@" src/viking.desktop.in
+
 echo -e "\nBuilding $PRGNAME...\n"
 sleep 1
 

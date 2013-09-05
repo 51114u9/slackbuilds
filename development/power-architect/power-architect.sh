@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright 2012 Marco Antonio Frias B., Cochabamba, BO
+# Copyright 2012-2013 Marco Antonio Frias B., Cochabamba, BO
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
@@ -20,6 +20,8 @@
 #  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+. /etc/power-architect-java.conf
+
 # Make sure prerequisite environment variables are set
 if [ -z "$JAVA_HOME" -a -z "$JRE_HOME" ]; then
   echo "Neither the JAVA_HOME nor the JRE_HOME environment variable is defined"
@@ -35,7 +37,7 @@ fi
 RUNJAVA="$JRE_HOME"/bin/java
 
 # Set full path to app home directory
-APP_HOME=/usr/share/@APP@
+APP_HOME=/usr/share/power-architect
 
 # Execute
-$RUNJAVA -jar $APP_HOME/@JARNAME@.jar "$@"
+$RUNJAVA -Xms${MMIN} -Xmx${MMAX} -jar $APP_HOME/architect.jar "$@"

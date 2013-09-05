@@ -1,11 +1,10 @@
 [Desktop Entry]
-Encoding=UTF-8
+Version=1.0
 Name=Power*Architect
 Comment=Data Modeling & Profiling Tool
 Comment[es]=Herramienta de Modelado y Análisis de Performance de Datos
 Exec=power-architect
 Icon=power-architect
-StartupNotify=true
+Terminal=false
 Type=Application
 Categories=Qt;KDE;GNOME;Application;Development;
-Terminal=false

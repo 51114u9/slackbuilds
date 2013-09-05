@@ -1,0 +1,23 @@
+
+Use /etc/power-architect-java.conf file to set the JVM you want
+Power*Architect to be run with, options to pass to Power*Architect
+through the environment variables -Xms -Xmx.
+
+########################################################################
+
+Tuning the JVM
+--------------
+
+-Xms and -Xmx
+
+  Used to define the size of the heap used by the JVM. -Xms defines the
+  initial and -Xmx defines the maximum size of the heap.
+
+  "heap" is where the JVM stores the object instances used by an
+  application.
+
+  Is recommended that the initial and maximum values for heap size be
+  set to the same value. This is often referred to as a fully committed
+  heap and this will instruct the JVM to create a heap that is initially
+  at its maximum size and prevent several full garbage collections from
+  occurring as the heap expands to its maximum size.

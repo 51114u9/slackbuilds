@@ -1,0 +1,7 @@
+PKGNAME=tail_n_mail
+VERSION=1.26.2
+LICENSE=BSD-3-Clause
+HOMEPAGE=http://bucardo.org/wiki/Tail_n_mail
+DOWNLOAD=https://github.com/bucardo/tail_n_mail/archive/1.26.2.tar.gz
+MD5SUM=28f03d49ac7b28ff9dc812ebdc3f3162
+REQUIRES="perl-authen-sasl, perl-net-smtp-ssl, perl-text-csv, perl-text-csv_xs"

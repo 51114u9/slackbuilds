@@ -1,0 +1,7 @@
+PKGNAME=libclastfm
+VERSION=0.5
+LICENSE=GPL-3
+HOMEPAGE=http://liblastfm.sourceforge.net/
+DOWNLOAD=http://downloads.sourceforge.net/liblastfm/libclastfm-0.5.tar.gz
+MD5SUM=0a71c485726a7e8970b970f520508a9b
+REQUIRES=""

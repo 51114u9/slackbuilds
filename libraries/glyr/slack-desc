@@ -1,0 +1,19 @@
+# HOW TO EDIT THIS FILE:
+# The "handy ruler" below makes it easier to edit a package description.  Line
+# up the first '|' above the ':' following the base package name, and the '|'
+# on the right side marks the last column you can put a character in.  You must
+# make exactly 11 lines for the formatting to be correct.  It's also
+# customary to leave one space after the ':'.
+
+    |-----handy-ruler------------------------------------------------------|
+glyr: glyr (A music metadata search engine utility and library)
+glyr:
+glyr: glyr it comes both in a commandline interface tool and as a C
+glyr: library, both with an easy to use interface. The sort of metadata
+glyr: glyr is searching (and downloading) is usually the data you see in
+glyr: your musicplayer.
+glyr:
+glyr:
+glyr: More information at: https://github.com/sahib/glyr/
+glyr:
+glyr: Packaged by Marco Antonio Frias B. (marcoantoniofrias@gmail.com)

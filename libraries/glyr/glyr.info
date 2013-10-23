@@ -1,0 +1,7 @@
+PKGNAME=glyr
+VERSION=1.0.1
+LICENSE=GPL-3
+HOMEPAGE=https://github.com/sahib/glyr/
+DOWNLOAD=https://github.com/sahib/glyr/archive/1.0.1.tar.gz
+MD5SUM=9473f2618ac879dc3e22ea623628a60b
+REQUIRES=""

@@ -1,0 +1,386 @@
+Osmconvert
+
+   osmconvert can be used to convert and process OpenStreetMap files. It masters fewer functions than the commonly-used Osmosis: for example, there is no way to access a database with osmconvert. However, the program runs faster and offers a few special functions (--all-to-nodes, --complex-ways and --out-statistics).
+
+   Contents                                                                      
+                                                                                 
+     * 1 Download                                                                
+     * 2 Start Program                                                           
+     * 3 Program Description                                                     
+          * 3.1 Converting Files                                                 
+          * 3.2 Applying Geographical Borders                                    
+               * 3.2.1 Clipping based on Longitude and Latitude                  
+               * 3.2.2 Clipping based on a Polygon                               
+               * 3.2.3 Clipping OSM Change Files?                                
+               * 3.2.4 Keeping Cross-Border Ways Complete                        
+               * 3.2.5 Keeping Cross-Border Multipolygons Complete               
+               * 3.2.6 Excluding References to Objects outside the Borders       
+               * 3.2.7 Merging two or more Geographical Areas                    
+               * 3.2.8 Special case: clipping contour data                       
+          * 3.3 Exclude Information or Contents from the Output File             
+               * 3.3.1 Dispose of Author Information                             
+               * 3.3.2 Excluding certain OSM Object Types                        
+               * 3.3.3 Dispose of Ways and Relations and Convert them to Nodes   
+          * 3.4 Updating OSM Files                                               
+          * 3.5 Retrieving the Differences between two OSM Files                 
+          * 3.6 Set the File Timestamp                                           
+          * 3.7 Retrieving Statistical Data                                      
+          * 3.8 Writing CSV Files                                                
+          * 3.9 Combining the functions                                          
+          * 3.10 Parallel Processing                                             
+          * 3.11 Parameter File                                                  
+          * 3.12 Technical Details                                               
+               * 3.12.1 Temporary Files                                          
+               * 3.12.2 Memory Management                                        
+               * 3.12.3 Test Output                                              
+     * 4 Benchmarks                                                              
+          * 4.1 Planet .pbf -> .o5m                                              
+          * 4.2 Planet .osm -> .o5m                                              
+          * 4.3 Planet .osm -> clipped .osm                                      
+
+Download
+
+   These Downloads are available:
+
+     * binary for Linux 32 bit
+     * binary for Windows 32 bit (runs with Win 64 too)
+     * source code (regular version)
+          * need to link zlib (i.e. cc osmconvert.c -lz -o osmconvert)
+     * (previous source code)
+     * (next source code (if available))
+     * Download and build in one run:
+     
+     wget -O - http://m.m.i24.cc/osmconvert.c | cc -x c - -lz -O3 -o osmconvert
+
+   As usual: There is no warranty, to the extent permitted by law.
+
+Start Program
+
+   Windows users can start osmconvert by double-clicking on the executable.
+
+   Users of all platforms can start osmconvert from the command-line. Simply executing osmconvert starts a friendly, interactive text-based interface which guides users through the process of using the program. The full capabilities of osmconvert are not available in interactive mode. Power users can bypass the interactive interface by passing flags, like this:
+
+ osmconvert --help
+
+Program Description
+
+   To get a detailed description, please use the built-in help function of the program:
+
+ osmconvert --help
+
+   This call will display a brief parameter overview:
+
+ osmconvert -h
+
+   The following chapters demonstrate the most important program functions.
+
+  Converting Files
+
+   Conversion may take place between these data formats:
+
+     * .osm
+     * .osc
+     * .osc.gz
+     * .osh
+     * .o5m
+     * .o5c
+     * .pbf
+
+   If you want to route the program's output to standard output you will have to tell the program which data format shall be used:
+
+   --out-osm (default), --out-osc, --out-osh, --out-o5m, --out-o5c, or --out-pbf.
+
+   If you supply the output file's name by applying the option -o=, osmconvert will determine the data format by evaluating the file name extension. Examples for both ways:
+
+ osmconvert norway.pbf >norway.osm
+ osmconvert region.pbf -o=region.o5m
+ osmconvert region.o5m -o=region.pbf
+ osmconvert 20110510_20110511.osc --out-o5c >20110510_20110511.o5c
+
+   You also can use compressed input files if you supply the data via standard input. Examples:
+
+ bzcat europe.osm.bz2 | osmconvert - -o=europe.o5m
+ osmconvert norway.pbf | gzip -1 >norway.osm.gz
+
+   The option "-" informs the program to expect input data via standard input.
+
+   osmconvert offers limited decompression functionality: you can decompress .gz files. The program will recognize gzip compression on its own, hence you do not need to care about which input file is gzip compressed and which is not. The built-in decompression algorithm is less powerful than specialized decompression programs, however this feature is really useful if you want to update an OSM file by using a number of newly downloaded compressed .osc files. Examples:
+
+ osmconvert old.o5m daily_updates/2011*.osc.gz -o=new.o5m
+ osmconvert daily_updates/2011*.osc.gz --merge-versions --out-osc | gzip > cumulative.osc.gz
+
+  Applying Geographical Borders
+
+    Clipping based on Longitude and Latitude
+
+   Supplying geocoordinates is the easiest way to define a geographical region which shall be extracted. Some online maps continuously display the geocoordinates of the mouse cursor. For example: Osmarenderer map, public transport map.
+
+   To define this limiting quasi rectangle you need to supply the coordinates of its southwestern and northeastern corners. For example:
+
+ osmconvert germany.pbf -b=10.5,49,11.5,50 -o=nuernberg.o5m
+ osmconvert ontario.osm -b=-75.80,45.19,-75.7,45.23 >ott.osm
+
+    Clipping based on a Polygon
+
+   Instead of a simple bounding rectangle you can use a border polygon file. This will allow a more accurate limitation to a political border, for example:
+
+ osmconvert germany.pbf -B=hamburg.poly -o=hamburg.pbf
+
+   The format of a border polygon file can be found in the OSM Wiki: here. You do not need to adhere strictly the format description, but you need to ensure that every line of coordinates starts with blanks.
+
+   osmconvert is able to deal with separate polygons in one file, it even considers "islands" in polygons if they have been defined properly.
+
+    Clipping OSM Change Files?
+
+   It is not recommended to apply geographical borders to change files. Since only nodes carry geographical locations, the program does not know what to do with ways and relations whose related nodes are not in the same file. As a result these ways and relations will be excluded from the file. This is usually not what you would like to accomplish.
+
+    Keeping Cross-Border Ways Complete
+
+   Some applications require lines (so-called ways) to stay intact even if they lie partially outside the defined geographical region. This can be accomplished by applying the option --complete-ways. Examples:
+
+ osmconvert germany.o5m -b=10.5,49,11.5,50 --complete-ways -o=nuernberg.o5m
+ osmconvert germany.o5m -B=hamburg.poly --complete-ways -o=hamburg.pbf
+
+   This option, and the one described in the next section, will limit the size of the input file to 2 GiB if your operating system is 32 bit Windows. As the input file is needed to be read two or three times, the program must "jump" within this file. Unfortunately the presently used link library does not support long jumps with 32 bit Windows. There is no such limitation for Linux (neither for the 32 bit nor for the 64 bit version).
+
+   Likewise for this and the following section, it is recommended to use .o5m as data format for the input file. The reason is that .pbf files are usually compressed internally and therefore will be read much slower than .o5m files.
+
+   The --complete-ways option is not available through the Osmupdate command.
+
+    Keeping Cross-Border Multipolygons Complete
+
+   More and more areas of rivers, forests and lakes are surrounded not only by one closed line but by several concatenated lines. So-called multipolygons are used to logically connect these physically connected lines. Each line holds a role depending on the position: "outer" for the surrounding border or "inner" for excluded areas (e.g. an island within a lake).
+
+   When applying geographical borders, osmconvert can consider these multipolygons and keep them intact even if there is only a small part of the multipoligon's area within the borders. To instruct the program to do so, choose option --complex-ways. Examples:
+
+ osmconvert germany.o5m -b=10.5,49,11.5,50 --complex-ways -o=nuernberg.o5m
+ osmconvert germany.o5m -B=hamburg.poly --complex-ways -o=hamburg.pbf
+
+   Please note the two remarks at the end of the previous section.
+
+    Excluding References to Objects outside the Borders
+
+   If you need to delete references to nodes which have been excluded because lying outside geographical borders, use option --drop-broken-refs (might be helpful for data imports into OSM Map Composer or JOSM).
+
+    Merging two or more Geographical Areas
+
+   Under certain conditions, OSM data files can be merged. If they hold objects (nodes, ways, relations) with the same id, they must have the same content. For example: If a way crosses the geographical border between two regional files, the way dataset must contain every node reference, even the references to nodes which do not lie within the borders of the regarding file. I.e., such a region must not have been cut out using the option --drop-brokenrefs. Examples for geographical merging:
+
+ osmconvert austria.o5m germany.o5m switzerland.o5m -o=dach.o5m
+ osmconvert north_america.osm south_america.osm -o=americas.osm
+
+    Special case: clipping contour data
+
+   See here: Howto render Garmin countour layers with no artefacts
+
+  Exclude Information or Contents from the Output File
+
+    Dispose of Author Information
+
+   For most applications the author tags are not needed. If you decide to exclude user name, user id, changeset and object timestamp information, add the command line option --drop-author. For example:
+
+ osmconvert --drop-author a.pbf -o=a.osm
+
+   Usually you will not encounter any problems when deleting the author information from .osm or .o5m files, however it is not encouraged to do this with .pbf files because most programs will not cope with this change of format.
+
+   If you need to reappend author information at a later time, let's say because a subsequent program depends on this format, you can generate them anew with the option --fake-author. Naturally, the new author information will be just replacement values which adhere the format description, nothing more.
+
+    Excluding certain OSM Object Types
+
+   If necessary, you can get rid of whole sections of a file:
+
+ --drop-nodes
+ --drop-ways
+ --drop-relations
+
+   The program osmfilter offers more granular filter functionality.
+
+    Dispose of Ways and Relations and Convert them to Nodes
+
+   Sometimes it will be easier for subsequent processing if the file contains only objects of the most primitive object type: nodes. osmconvert offers a function which deletes every way and every relation and creates a node as replacement for each. Each node's longitude and latitude are set to the geographical center of the deleted object. If the deleted object was a non-closed way, one of its nodes' position will be taken instead of the center. Each tag of the deleted object is copied to the node. As an id for the new node the way's (resp. relation's) id is taken and incremented by 1015 (resp. 2*1015). For example:
+
+ osmconvert hamburg.pbf --all-to-nodes -o=hamburg_nodes.osm
+
+   The OpenLinkMap, for example, uses this function to simplify subsequent processing of the data. The --object-type-offset= option allows you to change the id offset, from 1015 to a different value.
+
+   The option --add-bbox-tags will provide a bounding box for each way and relation which has been converted to a node. These bounding boxes will appear as tags. For Example (area of London):
+
+ <tag k="bBox" v="-0.5000,51.0000,0.5000,52.0000"/>
+
+  Updating OSM Files
+
+   If you have an OSM data file (.osm, .o5m or .pbf), you can merge it with one or more OSM change files (.osc or .o5c) to update it. For example, you have a planet.osm file or a regional germany.o5m file from yesterday, you can apply the daily change file from this morning to get an up-to-date planet.osm, resp. germany.o5m file. The syntax is like this:
+
+ osmconvert planet_old.osm changefile.osc -o=planet_new.osm
+ osmconvert planet_old.o5m changefile.osc.gz -o=planet_new.o5m
+ osmconvert germany_old.o5m changefile.osc -B=germany.poly -o=germany_new.o5m
+
+   In case your data file is older, you can apply two or more change files simultaneously:
+
+ osmconvert veryold.osm c1.osc c2.osc c3.osc -o=new.osm
+ osmconvert day24.o5m c24_25.osc c25_26.osc -o=day26.o5m
+ osmconvert day01.o5m november/*.osc -o=day30.o5m
+
+   The OSM objects in the change file must be unique. That means, there has to be only one occurrence of every node, way or relation. Minutely and hourly change files may contain more than one version of OSM objects, therefore you will get warning messages. You can combine all versions of each object if you specify the option --merge-versions. Then, only the newest version of each object will remain in the file.
+
+   To automatically update an OSM file or to create cumulative .osc files, please see osmupdate.
+
+  Retrieving the Differences between two OSM Files
+
+   You can create an .osc or an .o5c change file by comparing two .osm or .o5m files. For example:
+
+ osmconvert old.osm new.osm --diff -o=changefile.osc
+ osmconvert old.o5m new.o5m --diff -o=changefile.o5c
+
+   Other operations, like applying regional borders, are not allowed in the same run. Both files must be sorted by object type and id. Created objects will appear in the output file as "modified", unless having version number 1.
+
+   When calculating file differences osmconvert relies on the version numbers of the objects which are to be compared. If the version numbers are not available or if the objects shall be compared by contents, you can order the program to do so by applying the option --diff-contents (works for .o5m files only).
+
+   If an object is to be deleted, only its id (and author data) is stored. It has proven useful not to store the object's contents because it is going to be deleted anyway. However, a few programs expect the nodes' longitude and latitude values for formal reason even if the only action they do is to delete these values. The option --fake-lonlat helps you to create such formally required replacement values.
+
+  Set the File Timestamp
+
+   Usually, OSM files have a file timestamp which allows you to determine the actuality of the file. During file conversions, osmconvert will keep this timestamp. Nevertheless, it can be adjusted by you. For example:
+
+ osmconvert hamburg.o5m --timestamp=2011-08-01T23:50:00Z -o=hamburg.o5m
+
+  Retrieving Statistical Data
+
+   There are different ways to get meta data or statistical data of an OSM file. First, you can read a file's timestamp with the --out-timestamp option (the Z at the end stands for Zulu):
+
+ osmconvert file_with_timestamp.o5m --out-timestamp
+ 2011-08-01T23:50:00Z
+ osmconvert file_without_timestamp.o5m --out-timestamp
+ (invalid timestamp)
+
+   Second, you can analyze the whole file and create a set of statistical data:
+
+ $ osmconvert germany.osm.pbf --out-statistics
+ timestamp min: 2005-07-05T02:14:17Z
+ timestamp max: 2011-07-31T19:59:46Z
+ lon min: -20.0712330
+ lon max: 21.1441799
+ lat min: 47.0830289
+ lat max: 59.9982830
+ nodes: 78138447
+ ways: 11342322
+ relations: 176024
+ node id min: 1
+ node id max: 1380816490
+ way id min: 92
+ way id max: 123952798
+ relation id min: 159
+ relation id max: 1693098
+
+  Writing CSV Files
+
+   To get character-separated lists you may define ".csv" as output format. This can be done by using the -o= option, e.g. -o=my_table.csv or by defining one of the csv related options: --out-csv , --csv= , --csv-headline , --csv-separator= .
+
+   The table will have tree tab-separated columns: object type name, id, name. To change the column separator or to select a different set of columns please use the --csv-separator= resp. the --csv= option. Use the --help option to display further information on this topic. For example (in combination with option --all-to-nodes ):
+
+ osmconvert shops.osm --all-to-nodes --csv="@id @lon @lat amenity shop name" --csv-headline
+ @id               @lon        @lat        amenity  shop       name
+ 21548298          11.6122123  48.6884848  shop     bakery     Miller
+ 21552613          9.0651970   49.9979332  shop     butcher    Jaeger
+ 1000000168276611  6.6058085   51.4556093  shop     drugstore  AllForYou
+
+   Columns will be separated by Tab characters of your system's default size. It is recommended to use -o=somefilename.csv if the data are to be written into a file.
+
+  Combining the functions
+
+   Most of the previously introduced functions can be combined. Thus, for example, you can update an .osm file and limit its region in one pass:
+
+ osmconvert day24.osm -B=p.poly c24_25.osc -o=day25.osm
+
+  Parallel Processing
+
+   osmconvert does not support parallel processing on its own. However you can use your operating system's capabilities and enter such instructions at the command line. This might also be useful in cases you want to process more than one .pbf file, since osmconvert is presently not able to read more than one .pbf file at the same time. For example:
+
+ osmconvert region1.pbf --out-o5m | osmconvert - region2.pbf -o=all.pbf
+
+   In this example the first process will read the .pbf file "region1.pbf" and output it o5m-formatted to standard output. The second process will read this data from standard input, merge it with the other regional file "region2.pbf", and write it to the file "all.pbf". You will have recognized the minus sign in the second osmconvert command: it advices the program to read data from standard input. The pipe operator "|" connects standard output of the first command to standard input of the second command.
+
+   You also can use more than one pipe by creating so-called named pipes. Unfortunately this might not work with Windows. On Linux, there is the mkfifo command to create pipes. These pipes can be addressed the same way files are. In this example, three processes will be created to merge three .pbf files:
+
+ mkfifo p1 p2
+ osmconvert a.pbf --out-o5m -o=p1 & osmconvert osmconvert b.pbf --out-o5m -o=p2 & osmconvert p1 p2 c.pbf -o=all.pbf
+
+   The ampersand operators will each create a background process for the command which stands left to it. The last command in the line remains in foreground and will collect the data the two background processes produce.
+
+  Parameter File
+
+   The command line argument can get long if you specify complex operations. Please use a parameter file instead and refer to this file with --parameter-file=. For example:
+
+ osmconvert --parameter-file=my_parameters
+
+   File "my_parameters":
+
+ // verbose
+ -v
+ // input file
+ planet.o5m
+ // bounding box
+ -b=8.123,10.123,9.456,11.456
+ --complex-ways
+ // output file
+ -o=region.o5m
+
+   Empty lines are used to separate the parameters. Linefeeds within parameters will be converted to spaces. Lines which start with "// " are treated as comments and therefore ignored by the program.
+
+  Technical Details
+
+    Temporary Files
+
+   To perform certain operations osmconvert needs to create temporary files. These files are small - in comparison to the OSM files which are going to be processed. Their names each start with "osmconvert_tempfile" and end with numbers. You may change the left part of the file name, including the path. For example:
+
+ osmconvert germany.pbf -B=n.poly -t=/media/hd70/temp -o=nuernberg.o5m
+
+    Memory Management
+
+   There are two options to affect the program's memory management: --hash-memory=, --max-refs= and --max-objects=. Please refer to the detailed description shown by the help option:
+
+ osmconvert --help
+
+    Test Output
+
+   Sometimes it is nice to get some information about what the program is doing at the moment. You can activate the verbose mode by applying this option: -v. With -v=2 you will get even more detailed output, however it might be a bit confusing.
+
+Benchmarks
+
+  Planet .pbf -> .o5m
+
+   A quick one, as Osmconvert was not alone accessing the disk and I did not think of running 'time':
+
+   16GB ram, 7200rpmdisk.
+
+ ./osmconvert planet-latest.osm.pbf -o=planet-latest.o5m
+
+   Approx. 12 minutes.
+
+   Please add your benchmark results.
+
+  Planet .osm -> .o5m
+
+ $ date
+ Sat Dec 29 14:36:19 PST 2012
+ $ ./osmconvert planet.osm -o=planet-121207.o5m
+ $ date
+ Sat Dec 29 18:34:16 PST 2012
+
+ $ ls -lah
+ ...
+ -rw-------   1 user  staff    32G Dec 29 18:34 planet-121207.o5m
+ -rw-r--r--   1 user  staff   319G Dec  7 02:41 planet.osm
+ ...
+
+   So.... about 4 hrs on a 16GB i7 with planet.osm on a USB 3 external hd. Turns out this was a defective USB3 drive...
+
+  Planet .osm -> clipped .osm
+
+ $time ./osmconvert planet-130123.osm -b=-144,20,-50,90 -o=na_subset.osm
+
+ real    54m59.172s
+ user    39m18.091s
+ sys     5m3.111s
+
+   On an 16 core server with 48GB ram, 12x2TB raid5. Performance limited by use of single cpu thread. Input planet.osm was ~360GB, output subset was ~112GB.

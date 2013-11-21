@@ -1,9 +1,9 @@
 PKGNAME=mozilla-firefox
-VERSION=25.0
+VERSION=25.0.1
 LICENSE=MPL-2.0_GPL-2_LGPL-2.1
 HOMEPAGE=http://www.mozilla.org/projects/firefox/
-DOWNLOAD=ftp://ftp.mozilla.org/pub/mozilla.org/firefox/releases/25.0/linux-i686/en-US/firefox-25.0.tar.bz2
-DOWNLOAD_64=ftp://ftp.mozilla.org/pub/mozilla.org/firefox/releases/25.0/linux-x86_64/en-US/firefox-25.0.tar.bz2
-MD5SUM=9de2ba99a9139ae31576e5dce378e12b
-MD5SUM_64=1487e216e93417925ff9a8c1a5bdb0a3
+DOWNLOAD=ftp://ftp.mozilla.org/pub/mozilla.org/firefox/releases/25.0.1/linux-i686/en-US/firefox-25.0.1.tar.bz2
+DOWNLOAD_64=ftp://ftp.mozilla.org/pub/mozilla.org/firefox/releases/25.0.1/linux-x86_64/en-US/firefox-25.0.1.tar.bz2
+MD5SUM=34f448f96de98e5b7f62edb21934d0ca
+MD5SUM_64=1ee3175d9918fd90d1004a01283beb64
 REQUIRES=""

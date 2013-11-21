@@ -22,7 +22,7 @@
 
 ## Name, version and buildtag of the package
 PRGNAME=transmission
-VERSION=2.80
+VERSION=2.82
 RELEASE=1
 BUILDTAG=mfb
 
@@ -135,7 +135,6 @@ CXXFLAGS="$SLKCFLAGS" \
     --mandir=/usr/man \
     --enable-shared \
     --disable-static \
-    --enable-lightweight \
     --program-prefix= \
     --program-suffix= \
     --build=$ARCH-slackware-linux \

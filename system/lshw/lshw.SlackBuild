@@ -27,8 +27,8 @@ WITH_GUI=${WITH_GUI:-"YES"}
 
 ## Name, version and buildtag of the package
 PRGNAME=lshw
-VERSION=B.02.16
-RELEASE=2
+VERSION=B.02.17
+RELEASE=1
 BUILDTAG=mfb
 
 ## The documentation files:
@@ -172,7 +172,7 @@ if [ "${WITH_GUI}" == "YES" ]; then
 fi
 
 ## Remove files:
-rm -rf $PKG/usr/share/lshw/{pci,usb}.ids
+rm -rf $PKG/usr/share/lshw/*.ids
 
 ## Add documentation:
 mkdir -p $PKG/usr/doc/${PRGNAME}-${VERSION}

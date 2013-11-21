@@ -22,7 +22,7 @@
 
 ## Name, version and buildtag of the package
 PRGNAME=youtube-dl
-VERSION=2013.02.02
+VERSION=2013.11.20
 ARCH=noarch
 RELEASE=1
 BUILDTAG=mfb
@@ -96,13 +96,11 @@ chown -R root.root .
 echo -e "\nInstalling $PRGNAME...\n"
 sleep 1
 
-## Creating dir structure:
-mkdir -p $PKG/usr/bin
-mkdir -p $PKG/usr/man/man1
-
-## Copying files:
-install -m 755 youtube-dl $PKG/usr/bin
-install -m 644 youtube-dl.1 $PKG/usr/man/man1
+make DESTDIR=$PKG \
+    PREFIX=/usr \
+    MANDIR=/usr/man \
+    install \
+    2>&1 | tee $TMP/install-${PRGNAME}.log
 
 ## Add documentation:
 mkdir -p $PKG/usr/doc/${PRGNAME}-${VERSION}

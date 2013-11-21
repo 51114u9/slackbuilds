@@ -1,6 +1,7 @@
 PKGNAME=youtube-dl
-VERSION=2013.02.02
+VERSION=2013.11.20
 LICENSE=Unlicense
 HOMEPAGE=http://www.youtube-dl.org/
-DOWNLOAD=http://youtube-dl.org/downloads/2013.02.02/youtube-dl-2013.02.02.tar.gz
-MD5SUM=d8e27239ef44bb8a04b45fbbacb65ad7
+DOWNLOAD=http://youtube-dl.org/downloads/2013.11.20/youtube-dl-2013.11.20.tar.gz
+MD5SUM=30742fe1b0e0f14996206afa968faa40
+REQUIRES=""

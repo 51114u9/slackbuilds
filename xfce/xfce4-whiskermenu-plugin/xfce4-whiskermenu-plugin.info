@@ -1,7 +1,7 @@
 PKGNAME=xfce4-whiskermenu-plugin
-VERSION=1.2.1
+VERSION=1.2.2
 LICENSE=GPL-2
 HOMEPAGE=http://gottcode.org/xfce4-whiskermenu-plugin/
-DOWNLOAD=http://gottcode.org/xfce4-whiskermenu-plugin/xfce4-whiskermenu-plugin-1.2.1-src.tar.bz2
-MD5SUM=d17a931096b1e7ae1e5b2f0c2a4daaa5
+DOWNLOAD=http://gottcode.org/xfce4-whiskermenu-plugin/xfce4-whiskermenu-plugin-1.2.2-src.tar.bz2
+MD5SUM=1498c725fe6568aa0740649fd99e5e49
 REQUIRES=""

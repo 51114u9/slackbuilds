@@ -22,7 +22,7 @@
 
 ## Name, version and buildtag of the package
 PRGNAME=xfce4-whiskermenu-plugin
-VERSION=1.2.1
+VERSION=1.2.2
 RELEASE=1
 BUILDTAG=mfb
 
@@ -125,12 +125,15 @@ echo -e "\nBuilding $PRGNAME...\n"
 sleep 1
 
 cmake \
+    -DCMAKE_BUILD_TYPE="Release" \
     -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_INSTALL_LIBDIR=/usr/lib${LIBDIRSUFFIX} \
     -DCMAKE_INSTALL_MANDIR=/usr/man \
     -DENABLE_AS_NEEDED=OFF \
+    -DENABLE_LINKER_OPTIMIZED_HASH_TABLES=OFF \
+    -DENABLE_DEVELOPER_MODE=OFF \
     -DCMAKE_CXX_FLAGS="$SLKCFLAGS" \
     -DCMAKE_C_FLAGS="$SLKCFLAGS" \
-    -DCMAKE_BUILD_TYPE="release" \
     2>&1 | tee $TMP/configure-${PRGNAME}.log
 
 echo -e "\nInstalling $PRGNAME...\n"

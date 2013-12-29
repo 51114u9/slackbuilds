@@ -22,12 +22,12 @@
 
 ## Name, version and buildtag of the package
 PRGNAME=xfce4-whiskermenu-plugin
-VERSION=1.2.2
+VERSION=1.3.0
 RELEASE=1
 BUILDTAG=mfb
 
 ## The documentation files:
-DOCFILES="ChangeLog COPYING INSTALL NEWS README"
+DOCFILES="AUTHORS ChangeLog COPYING INSTALL NEWS README"
 
 ## Where do we look for sources?
 SRCDIR=$(cd $(dirname $0); pwd)
@@ -135,6 +135,8 @@ cmake \
     -DCMAKE_CXX_FLAGS="$SLKCFLAGS" \
     -DCMAKE_C_FLAGS="$SLKCFLAGS" \
     2>&1 | tee $TMP/configure-${PRGNAME}.log
+
+make -j$NUMCPU 2>&1 | tee $TMP/make-${PRGNAME}.log
 
 echo -e "\nInstalling $PRGNAME...\n"
 sleep 1

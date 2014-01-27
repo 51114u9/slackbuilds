@@ -1,0 +1,7 @@
+PKGNAME=vala
+VERSION=0.23.1
+LICENSE=LGPL-2.1
+HOMEPAGE=https://wiki.gnome.org/Projects/Vala
+DOWNLOAD=http://download.gnome.org/sources/vala/0.23/vala-0.23.1.tar.xz
+MD5SUM=3339d98b43038b4cb72b4c9bc40309d4
+REQUIRES=""

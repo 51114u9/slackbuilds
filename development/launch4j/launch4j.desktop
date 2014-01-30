@@ -1,11 +1,11 @@
 [Desktop Entry]
-Encoding=UTF-8
+Version=1.0
 Name=Launch4J
 Comment=Cross-platform Java executable wrapper
 Comment[es]=Envolvedor de ejecutables Java multiplataforma
 Exec=launch4j
 Icon=launch4j
-StartupNotify=true
+Terminal=false
 Type=Application
 Categories=Qt;KDE;GNOME;Application;Development;
-Terminal=false
+MimeType=

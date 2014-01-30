@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright 2011-2012 Marco Antonio Frias B., Cochabamba, BO
+# Copyright 2011-2014 Marco Antonio Frias B., Cochabamba, BO
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
@@ -22,7 +22,7 @@
 
 ## Name, version and buildtag of the package
 PRGNAME=launch4j
-VERSION=3.0.2
+VERSION=3.1.0b2
 ARCH=noarch
 RELEASE=1
 BUILDTAG=mfb
@@ -88,8 +88,7 @@ echo -e "\nExtracting the source archive(s) for $PRGNAME...\n"
 sleep 1
 
 tar -xzvf ${SOURCE}
-mv ${PRGNAME} ${PRGNAME}-${VERSION}
-cd ${PRGNAME}-${VERSION}
+cd ${PRGNAME}
 find . \( -perm 777 -o -perm 775 -o -perm 711 -o -perm 555 -o -perm 511 \) -exec chmod 755 {} \;
 find . \( -perm 666 -o -perm 664 -o -perm 600 -o -perm 444 -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 chown -R root.root .
@@ -97,14 +96,13 @@ chown -R root.root .
 echo -e "\nInstalling $PRGNAME...\n"
 sleep 1
 
-## Creating  dir structure:
-mkdir -p $PKG/usr/bin
-mkdir -p $PKG/usr/share/{launch4j,applications,pixmaps}
+install -m 755 -d $PKG/usr/bin
+install -m 755 -d $PKG/usr/share/launch4j
+install -m 755 -d $PKG/usr/share/{applications,pixmaps}
 
-## Copying files:
 sed "s/@APP@/launch4j/g;s/@JARNAME@/launch4j/g" $SRCDIR/jlaunch.sh > $PKG/usr/bin/launch4j
 chmod 755 $PKG/usr/bin/launch4j
-cp -pR bin head lib manifest w32api $PKG/usr/share/launch4j
+cp -pR bin head lib manifest sign4j w32api $PKG/usr/share/launch4j
 install -m 755 launch4j.jar $PKG/usr/share/launch4j
 install -m 644 $SRCDIR/launch4j.desktop $PKG/usr/share/applications
 install -m 644 $SRCDIR/launch4j.png $PKG/usr/share/pixmaps
@@ -128,8 +126,8 @@ install -m 644 $SRCDIR/slack-desc .
 install -m 644 $SRCDIR/doinst.sh .
 install -m 644 $SRCDIR/${PRGNAME}.info .
 install -m 644 $SRCDIR/${PRGNAME}.SlackBuild .
-install -m 644 $SRCDIR/launch4j.desktop .
-install -m 644 $SRCDIR/launch4j.png .
+install -m 644 $SRCDIR/*.desktop .
+install -m 644 $SRCDIR/*.png .
 )
 
 ## Add a package description:
@@ -138,7 +136,7 @@ install -m 644 $SRCDIR/doinst.sh $PKG/install
 install -m 644 $SRCDIR/slack-desc $PKG/install
 
 cat > $OUTPUT/${PRGNAME}-${VERSION}-${ARCH}-${RELEASE}${BUILDTAG}.dep << EOL
-jre >= 6 | jdk >= 6
+openjre >= 6 | jre >= 6 | openjdk >= 6 | jdk >= 6
 EOL
 
 ## Build the package:

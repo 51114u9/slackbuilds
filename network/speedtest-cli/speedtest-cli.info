@@ -1,0 +1,7 @@
+PKGNAME=speedtest-cli
+VERSION=0.2.4
+LICENSE=APACHE-2.0
+HOMEPAGE=https://github.com/sivel/speedtest-cli/
+DOWNLOAD=https://github.com/sivel/speedtest-cli/archive/v0.2.4.tar.gz
+MD5SUM=229fc4c6ca702e5f5abdeabfb630efc7
+REQUIRES=""

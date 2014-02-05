@@ -1,9 +1,9 @@
 PKGNAME=mozilla-firefox
-VERSION=26.0
+VERSION=27.0
 LICENSE=MPL-2.0_GPL-2_LGPL-2.1
 HOMEPAGE=http://www.mozilla.org/projects/firefox/
-DOWNLOAD=ftp://ftp.mozilla.org/pub/mozilla.org/firefox/releases/26.0/linux-i686/en-US/firefox-26.0.tar.bz2
-DOWNLOAD_64=ftp://ftp.mozilla.org/pub/mozilla.org/firefox/releases/26.0/linux-x86_64/en-US/firefox-26.0.tar.bz2
-MD5SUM=92f89c9e4f8325e947de8918efb18e55
-MD5SUM_64=4b74154431b8a3766fad4fe4fe1f9f7c
+DOWNLOAD=ftp://ftp.mozilla.org/pub/firefox/releases/27.0/linux-i686/en-US/firefox-27.0.tar.bz2
+DOWNLOAD_64=ftp://ftp.mozilla.org/pub/firefox/releases/27.0/linux-x86_64/en-US/firefox-27.0.tar.bz2
+MD5SUM=2711961e5fcccbb224625a77fd0f4422
+MD5SUM_64=ea3eb21e260647bfbe5f308bff74d6f0
 REQUIRES=""

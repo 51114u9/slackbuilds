@@ -1,7 +1,7 @@
 PKGNAME=josm
-VERSION=r6955
+VERSION=r7054
 LICENSE=GPL-2
 HOMEPAGE=http://josm.openstreetmap.de/
-DOWNLOAD=http://josm.openstreetmap.de/download/josm-snapshot-6955.jar
-MD5SUM=deb53012283725b1af4e412a3ef17735
+DOWNLOAD=http://josm.openstreetmap.de/download/josm-snapshot-7054.jar
+MD5SUM=8cf9dffd37c2b3471ce2503eb1c4057f
 REQUIRES="jre|jdk|openjre|openjdk"

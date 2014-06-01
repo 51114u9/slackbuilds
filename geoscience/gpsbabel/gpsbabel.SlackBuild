@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright 2012-2013 Marco Antonio Frias B., Cochabamba, BO
+# Copyright 2012-2014 Marco Antonio Frias B., Cochabamba, BO
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
@@ -22,12 +22,12 @@
 
 ## Name, version and buildtag of the package
 PRGNAME=gpsbabel
-VERSION=1.4.4
-RELEASE=2
+VERSION=1.5.1
+RELEASE=1
 BUILDTAG=mfb
 
 ## The documentation files:
-DOCFILES="AUTHORS COPYING README* gui/TODO"
+DOCFILES="AUTHORS COPYING README*"
 
 ## Where do we look for sources?
 SRCDIR=$(cd $(dirname $0); pwd)
@@ -115,33 +115,17 @@ find . \( -perm 777 -o -perm 775 -o -perm 711 -o -perm 555 -o -perm 511 \) -exec
 find . \( -perm 666 -o -perm 664 -o -perm 600 -o -perm 444 -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 chown -R root.root .
 
-echo -e "\nApply patches...\n"
-sleep 1
-
-## Rename gpsbabelfe binary:
-patch -b -p1 --verbose < \
-    $SRCDIR/${PRGNAME}_gui.patch 2>&1 | tee $TMP/patch-${PRGNAME}.log
-
-## Pickup gmapbase.html from /usr/share/gpsbabel:
-patch -b -p1 --verbose < \
-    $SRCDIR/${PRGNAME}_gmapbase.patch 2>&1 | tee -a $TMP/patch-${PRGNAME}.log
-
-## No automatic phone home by default:
-patch -b -p1 --verbose < \
-    $SRCDIR/${PRGNAME}_nocheck.patch 2>&1 | tee -a $TMP/patch-${PRGNAME}.log
-
 echo -e "\nBuilding $PRGNAME...\n"
 sleep 1
 
 CFLAGS="$SLKCFLAGS" \
+CXXFLAGS="$SLKCFLAGS" \
 LDFLAGS="$SLKLDFLAGS" \
 ./configure \
     --prefix=/usr \
     --libdir=/usr/lib${LIBDIRSUFFIX} \
     --sysconfdir=/etc \
     --localstatedir=/var \
-    --enable-shared \
-    --disable-static \
     --program-prefix= \
     --program-suffix= \
     --build=$ARCH-slackware-linux \
@@ -161,17 +145,15 @@ install -m 755 -d $PKG/usr/share/gpsbabel
 install -m 755 -d $PKG/usr/share/{applications,pixmaps}
 install -m 755 -d $PKG/usr/share/qt4/translations
 
-install -m 755 gui/objects/gpsbabelfe $PKG/usr/bin
+install -m 755 gui/objects/gpsbabelfe-bin $PKG/usr/bin
 install -m 644 gui/gmapbase.html $PKG/usr/share/gpsbabel
-install -m 644 gui/gpsbabel*_*.qm $PKG/usr/share/qt4/translations
+install -m 644 gui/gpsbabel*.qm $PKG/usr/share/qt4/translations
 install -m 644 gui/gpsbabel.desktop $PKG/usr/share/applications
 install -m 644 gui/images/appicon.png $PKG/usr/share/pixmaps/gpsbabel.png
 
 ## Add documentation:
 mkdir -p $PKG/usr/doc/${PRGNAME}-${VERSION}
 cp -pR $DOCFILES $PKG/usr/doc/${PRGNAME}-${VERSION} || true
-( cd $PKG/usr/doc/${PRGNAME}-${VERSION} ; tar -xjvf $SRCDIR/${PRGNAME}-docs.tar.bz2 )
-find $PKG/usr/doc/${PRGNAME}-${VERSION} -type d -exec chmod 755 {} \;
 find $PKG/usr/doc/${PRGNAME}-${VERSION} -type f -exec chmod 644 {} \;
 chown -R root.root $PKG/usr/doc/${PRGNAME}-${VERSION}
 
@@ -189,9 +171,7 @@ install -m 644 $SRCDIR/ChangeLog .
 install -m 644 $SRCDIR/slack-desc .
 install -m 644 $SRCDIR/doinst.sh .
 install -m 644 $SRCDIR/${PRGNAME}.info .
-install -m 644 $SRCDIR/${PRGNAME}_*.patch .
 install -m 644 $SRCDIR/${PRGNAME}.SlackBuild .
-install -m 644 $SRCDIR/${PRGNAME}-docs.tar.bz2 .
 )
 
 ## Add a package description:

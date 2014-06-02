@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright 2010-2013 Marco Antonio Frias B., Cochabamba, BO
+# Copyright 2010-2014 Marco Antonio Frias B., Cochabamba, BO
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
@@ -22,13 +22,13 @@
 
 ## Name, version and buildtag of the package
 PRGNAME=gimp-script-fu
-VERSION=2.8_r36
+VERSION=2.8_r41
 ARCH=noarch
 RELEASE=1
 BUILDTAG=mfb
 
 ## The documentation files:
-DOCFILES="1_INSTALL"
+DOCFILES="1_INSTALL README.txt"
 
 ## Where do we look for sources?
 SRCDIR=$(cd $(dirname $0); pwd)
@@ -96,9 +96,12 @@ chown -R root.root .
 echo -e "\nInstalling $PRGNAME...\n"
 sleep 1
 
-install -m 755 -d $PKG/usr/share/gimp/2.0/{scripts,gimpressionist/Presets}
+install -m 755 -d $PKG/usr/share/gimp/2.0/{scripts,gimpressionist/Presets,gradients,patterns}
+
 install -m 644 *.scm $PKG/usr/share/gimp/2.0/scripts
-install -m 644 Presets/* $PKG/usr/share/gimp/2.0/gimpressionist/Presets
+install -m 644 gimpressionist/Presets/* $PKG/usr/share/gimp/2.0/gimpressionist/Presets
+cp -pR gradients/* $PKG/usr/share/gimp/2.0/gradients
+install -m 644 patterns/* $PKG/usr/share/gimp/2.0/patterns
 
 ## Add documentation:
 mkdir -p $PKG/usr/doc/${PRGNAME}-${VERSION}

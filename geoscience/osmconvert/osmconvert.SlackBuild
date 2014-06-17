@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright 2012-2013 Marco Antonio Frias B., Cochabamba, BO
+# Copyright 2012-2014 Marco Antonio Frias B., Cochabamba, BO
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
@@ -22,7 +22,7 @@
 
 ## Name, version and buildtag of the package
 PRGNAME=osmconvert
-VERSION=0.7T
+VERSION=0.7V
 RELEASE=1
 BUILDTAG=mfb
 
@@ -103,7 +103,9 @@ echo -e "\nBuilding $PRGNAME...\n"
 sleep 1
 
 echo -e "gcc $(basename ${SOURCE}) -lz ${SLKCFLAGS} -o osmconvert"
-gcc ${SOURCE} -lz ${SLKCFLAGS} -o osmconvert 2>&1 | tee $TMP/build-${PRGNAME}.log
+gcc ${SOURCE} \
+    -lz ${SLKCFLAGS} \
+    -o osmconvert 2>&1 | tee $TMP/build-${PRGNAME}.log
 
 echo -e "\nInstalling $PRGNAME...\n"
 sleep 1
@@ -113,13 +115,6 @@ mkdir -p $PKG/usr/bin
 
 ## Copying files:
 install -m 755 osmconvert $PKG/usr/bin
-
-## Add documentation:
-mkdir -p $PKG/usr/doc/${PRGNAME}-${VERSION}
-cp -pR ${SRCDIR}/README $PKG/usr/doc/${PRGNAME}-${VERSION}
-find $PKG/usr/doc/${PRGNAME}-${VERSION} -type d -exec chmod 755 {} \;
-find $PKG/usr/doc/${PRGNAME}-${VERSION} -type f -exec chmod 644 {} \;
-chown -R root.root $PKG/usr/doc/${PRGNAME}-${VERSION}
 
 ## Strip binaries:
 find $PKG | xargs file | grep -e "executable" -e "shared object" | grep ELF | \
@@ -135,7 +130,6 @@ install -m 644 $SRCDIR/ChangeLog .
 install -m 644 $SRCDIR/slack-desc .
 install -m 644 $SRCDIR/${PRGNAME}.info .
 install -m 644 $SRCDIR/${PRGNAME}.SlackBuild .
-install -m 644 $SRCDIR/README .
 )
 
 ## Add a package description:

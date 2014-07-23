@@ -22,7 +22,7 @@
 
 ## Name, version and buildtag of the package
 PRGNAME=mozilla-firefox
-VERSION=30.0
+VERSION=31.0
 RELEASE=1
 BUILDTAG=mfb
 

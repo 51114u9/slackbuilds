@@ -22,10 +22,13 @@
 
 ## Name, version and buildtag of the package
 PRGNAME=josm
-VERSION=r7353
+VERSION=r7438
 ARCH=noarch
 RELEASE=1
 BUILDTAG=mfb
+
+## The documentation files:
+DOCFILES="CONTRIBUTION LICENSE README gpl-3.0.txt"
 
 ## Where do we look for sources?
 SRCDIR=$(cd $(dirname $0); pwd)
@@ -81,6 +84,14 @@ fi
 ## --- PACKAGE BUILDING ---
 cd $TMP/tmp-${PRGNAME}
 
+echo -e "\nExtracting the source archive(s) for $PRGNAME...\n"
+sleep 1
+
+unzip ${SOURCE}
+find . \( -perm 777 -o -perm 775 -o -perm 711 -o -perm 555 -o -perm 511 \) -exec chmod 755 {} \;
+find . \( -perm 666 -o -perm 664 -o -perm 600 -o -perm 444 -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
+chown -R root.root .
+
 echo -e "\nInstalling $PRGNAME...\n"
 sleep 1
 
@@ -101,9 +112,9 @@ done
 
 ## Add documentation:
 mkdir -p $PKG/usr/doc/${PRGNAME}-${VERSION}
-( cd $PKG/usr/doc/${PRGNAME}-${VERSION} ; tar jxvf $SRCDIR/${PRGNAME}-docs.tar.bz2 )
-cp -pR $SRCDIR/README.Slackware $PKG/usr/doc/${PRGNAME}-${VERSION}
+cp -pR $DOCFILES $SRCDIR/README* $PKG/usr/doc/${PRGNAME}-${VERSION} || true
 find $PKG/usr/doc/${PRGNAME}-${VERSION} -type d -exec chmod 755 {} \;
+find $PKG/usr/doc/${PRGNAME}-${VERSION} -type f -exec chmod 644 {} \;
 chown -R root.root $PKG/usr/doc/${PRGNAME}-${VERSION}
 
 echo -e "\nBuilding package...\n"
@@ -117,8 +128,7 @@ install -m 644 $SRCDIR/slack-desc .
 install -m 644 $SRCDIR/doinst.sh .
 install -m 644 $SRCDIR/${PRGNAME}.info .
 install -m 644 $SRCDIR/${PRGNAME}.SlackBuild .
-install -m 644 $SRCDIR/${PRGNAME}-docs.tar.bz2 .
-install -m 644 $SRCDIR/*.Slackware .
+install -m 644 $SRCDIR/README* .
 install -m 644 $SRCDIR/*.new .
 install -m 644 $SRCDIR/josm.desktop .
 install -m 644 $SRCDIR/josm.sh .
@@ -132,7 +142,7 @@ install -m 644 $SRCDIR/doinst.sh $PKG/install
 install -m 644 $SRCDIR/slack-desc $PKG/install
 
 cat > $OUTPUT/${PRGNAME}-${VERSION}-${ARCH}-${RELEASE}${BUILDTAG}.dep << EOL
-jre | jdk | openjre | openjdk
+jre >= 7 | jdk >= 7 | openjre >= 7 | openjdk >= 7
 EOL
 
 ## Build the package:

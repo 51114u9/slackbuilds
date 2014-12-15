@@ -1,9 +1,9 @@
 PKGNAME=mozilla-firefox
-VERSION=33.0
+VERSION=34.0.5
 LICENSE=MPL-2.0_GPL-2_LGPL-2.1
 HOMEPAGE=http://www.mozilla.org/projects/firefox/
-DOWNLOAD=ftp://ftp.mozilla.org/pub/firefox/releases/33.0/linux-i686/en-US/firefox-33.0.tar.bz2
-DOWNLOAD_64=ftp://ftp.mozilla.org/pub/firefox/releases/33.0/linux-x86_64/en-US/firefox-33.0.tar.bz2
-MD5SUM=542b27d5f3afcb55406a7af72f68f3d5
-MD5SUM_64=ae4e8275750fd5f87963cbe263e8ba34
+DOWNLOAD=ftp://ftp.mozilla.org/pub/firefox/releases/34.0.5/linux-i686/en-US/firefox-34.0.5.tar.bz2
+DOWNLOAD_64=ftp://ftp.mozilla.org/pub/firefox/releases/34.0.5/linux-x86_64/en-US/firefox-34.0.5.tar.bz2
+MD5SUM=dfe5bc7643b3a5636e6775d236f071a5
+MD5SUM_64=1ffca0d8ef608123f2b9b30382043b6a
 REQUIRES=""

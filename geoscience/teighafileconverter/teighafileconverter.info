@@ -1,0 +1,7 @@
+PKGNAME=teighafileconverter
+VERSION=3.09.1
+LICENSE=Copyright
+HOMEPAGE=http://www.opendesign.com/guestfiles/TeighaFileConverter
+DOWNLOAD=http://www.opendesign.com/files/guestdownloads/TeighaFileConverter/TeighaFileConverter_lnxX86_4.4dll_3.09.1.i386.rpm
+MD5SUM=1889f394e0b9a461bc14ffeef2f41d7e
+REQUIRES=""

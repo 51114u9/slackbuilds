@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright 2013 Marco Antonio Frias B., Cochabamba, BO
+# Copyright 2013-2015 Marco Antonio Frias B., Cochabamba, BO
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
@@ -22,13 +22,13 @@
 
 ## Name, version and buildtag of the package
 PRGNAME=youtube-dl
-VERSION=2013.11.20
+VERSION=2015.01.01
 ARCH=noarch
 RELEASE=1
 BUILDTAG=mfb
 
 ## The documentation files:
-DOCFILES="CHANGELOG LICENSE README.txt"
+DOCFILES="LICENSE README.txt"
 
 ## Where do we look for sources?
 SRCDIR=$(cd $(dirname $0); pwd)

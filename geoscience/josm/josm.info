@@ -1,7 +1,7 @@
 PKGNAME=josm
-VERSION=r8315
+VERSION=r8423
 LICENSE=GPL-2
 HOMEPAGE=http://josm.openstreetmap.de/
-DOWNLOAD=https://josm.openstreetmap.de/download/josm-snapshot-8315.jar
-MD5SUM=f26198d3bb1421985d3055dbae55f4f8
+DOWNLOAD=https://josm.openstreetmap.de/download/josm-snapshot-8423.jar
+MD5SUM=a0f83bb705397dbf41347ee8c47ed4ef
 REQUIRES="jre >= 7|jdk >= 7|openjre >= 7|openjdk >= 7"

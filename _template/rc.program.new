@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright 2012-2013 Marco Antonio Frias B., Cochabamba, BO
+# Copyright 2012-2015 Marco Antonio Frias B., Cochabamba, BO
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright 2012-2013 Marco Antonio Frias B., Cochabamba, BO
+# Copyright 2012-2015 Marco Antonio Frias B., Cochabamba, BO
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
@@ -29,12 +29,12 @@ if [ -z "$JAVA_HOME" -a -z "$JRE_HOME" ]; then
   exit 1
 fi
 
-if [ -z "$JRE_HOME" ]; then
-  JRE_HOME="$JAVA_HOME"
-fi
-
 # Set standard commands for invoking java
-RUNJAVA="$JRE_HOME"/bin/java
+if [ -d "$JAVA_HOME"/jre ]; then
+  RUNJAVA="$JAVA_HOME"/jre/bin/java
+else
+  RUNJAVA="$JAVA_HOME"/bin/java
+fi
 
 # Set full path to app home directory
 APP_HOME=/usr/share/josm

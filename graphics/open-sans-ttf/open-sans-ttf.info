@@ -1,7 +1,7 @@
 PKGNAME=open-sans-ttf
-VERSION=20130712
+VERSION=20150807
 LICENSE=APACHE-2.0
 HOMEPAGE=http://www.opensans.com/
 DOWNLOAD=http://www.fontsquirrel.com/fonts/download/open-sans
-MD5SUM=790dadcb5c72f1d5859377704aba0075
+MD5SUM=4e52bc581051d8191abb79c16e382304
 REQUIRES=""

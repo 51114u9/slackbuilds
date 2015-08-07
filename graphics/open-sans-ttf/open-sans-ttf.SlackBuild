@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright 2013 Marco Antonio Frias B., Cochabamba, BO
+# Copyright 2013-2015 Marco Antonio Frias B., Cochabamba, BO
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
@@ -22,7 +22,7 @@
 
 ## Name, version and buildtag of the package
 PRGNAME=open-sans-ttf
-VERSION=20130712
+VERSION=20150807
 ARCH=noarch
 RELEASE=1
 BUILDTAG=mfb

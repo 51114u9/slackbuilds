@@ -1,7 +1,7 @@
 PKGNAME=geany-themes
-VERSION=20130708
+VERSION=20150818
 LICENSE=GPL-2_BSD_OTHERS
 HOMEPAGE=https://github.com/codebrainz/geany-themes
 DOWNLOAD=https://github.com/codebrainz/geany-themes/archive/master.zip
-MD5SUM=75431c772bbae4d64525d27c47cbc9f2
+MD5SUM=747f8b6096203366bdeebdb6b359a86e
 REQUIRES="geany"

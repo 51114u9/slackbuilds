@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright 2011-2013 Marco Antonio Frias B., Cochabamba, BO
+# Copyright 2011-2015 Marco Antonio Frias B., Cochabamba, BO
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
@@ -22,7 +22,7 @@
 
 ## Name, version and buildtag of the package
 PRGNAME=geany-plugins
-VERSION=1.23
+VERSION=1.25
 RELEASE=1
 BUILDTAG=mfb
 
@@ -134,6 +134,7 @@ LDFLAGS="$SLKLDFLAGS" \
     --docdir=/usr/doc/${PRGNAME}-${VERSION} \
     --enable-shared \
     --disable-static \
+    --disable-devhelp \
     --program-prefix= \
     --program-suffix= \
     --build=$ARCH-slackware-linux \
@@ -178,7 +179,7 @@ mkdir -p $PKG/install
 install -m 644 $SRCDIR/slack-desc $PKG/install
 
 cat > $OUTPUT/${PRGNAME}-${VERSION}-${ARCH}-${RELEASE}${BUILDTAG}.dep << EOL
-webkit | webkitgtk
+libgit2 >= 0.21
 EOL
 
 ## Build the package:

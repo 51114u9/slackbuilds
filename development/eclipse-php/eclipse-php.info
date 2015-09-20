@@ -1,0 +1,9 @@
+PKGNAME=eclipse-php
+VERSION=4.5.0
+LICENSE=EPL-1
+HOMEPAGE=http://www.eclipse.org/
+DOWNLOAD=http://download.eclipse.org/technology/epp/downloads/release/mars/R/eclipse-php-mars-R-linux-gtk.tar.gz
+DOWNLOAD_64=http://download.eclipse.org/technology/epp/downloads/release/mars/R/eclipse-php-mars-R-linux-gtk-x86_64.tar.gz
+MD5SUM=792289baeef7586ae5d05e3c6c4ef9ad
+MD5SUM_64=1437ae99ed2e389d46c64c33bfe64f02
+REQUIRES="jre>=7|openjre>=7|jdk>=7|openjdk>=7"

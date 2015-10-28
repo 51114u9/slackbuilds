@@ -1,9 +1,9 @@
 PKGNAME=mozilla-firefox
-VERSION=40.0
+VERSION=41.0.2
 LICENSE=MPL-2.0_GPL-2_LGPL-2.1
 HOMEPAGE=http://www.mozilla.org/projects/firefox/
-DOWNLOAD=https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/40.0/linux-i686/en-US/firefox-40.0.tar.bz2
-DOWNLOAD_64=https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/40.0/linux-x86_64/en-US/firefox-40.0.tar.bz2
-MD5SUM=4d3e29bba3d8b75c607247c378a583ac
-MD5SUM_64=0cc7b398175a48144f3fd658a2ff052c
+DOWNLOAD=https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/41.0.2/linux-i686/en-US/firefox-41.0.2.tar.bz2
+DOWNLOAD_64=https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/41.0.2/linux-x86_64/en-US/firefox-41.0.2.tar.bz2
+MD5SUM=d89a9cdb753ffdb82e42a77aa0f3005a
+MD5SUM_64=f1e857e49d05e8d2df5c6df5a31f8053
 REQUIRES=""

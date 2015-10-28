@@ -1,7 +1,7 @@
 PKGNAME=josm
-VERSION=r8643
+VERSION=r8952
 LICENSE=GPL-2
 HOMEPAGE=http://josm.openstreetmap.de/
-DOWNLOAD=http://josm.openstreetmap.de/download/josm-snapshot-8643.jar
-MD5SUM=d5aad474439205b8978b2c2b8e109316
+DOWNLOAD=http://josm.openstreetmap.de/download/josm-snapshot-8952.jar
+MD5SUM=fed2c2adc87a25e00d073cd7f7dfd397
 REQUIRES="jre >= 7|jdk >= 7|openjre >= 7|openjdk >= 7"

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright 2007-2013 Marco Antonio Frias B., Cochabamba, BO
+# Copyright 2007-2015 Marco Antonio Frias B., Cochabamba, BO
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
@@ -23,7 +23,7 @@
 
 ## Name, version and buildtag of the package
 PRGNAME=postgresql
-VERSION=9.2.4
+VERSION=9.4.5
 RELEASE=1
 BUILDTAG=mfb
 
@@ -140,7 +140,7 @@ LDFLAGS="$SLKLDFLAGS" \
     --with-python \
     --with-ldap \
     --with-openssl \
-    --with-ossp-uuid \
+    --with-uuid=e2fs \
     --with-libxml \
     --with-libxslt \
     --with-system-tzdata=/usr/share/zoneinfo \
@@ -197,10 +197,6 @@ install -m 644 $SRCDIR/rc.postgresd.new .
 mkdir -p $PKG/install
 install -m 644 $SRCDIR/doinst.sh $PKG/install
 install -m 644 $SRCDIR/slack-desc $PKG/install
-
-cat > $OUTPUT/${PRGNAME}-${VERSION}-${ARCH}-${RELEASE}${BUILDTAG}.dep << EOL
-ossp-uuid
-EOL
 
 ## Build the package:
 cd $PKG
@@ -292,7 +288,7 @@ ${PRGNAME}-contrib: Packaged by Marco Antonio Frias B. (marcoantoniofrias@gmail.
 EOL
 
 cat > $OUTPUT/${PRGNAME}-contrib-${VERSION}-${ARCH}-${RELEASE}${BUILDTAG}.dep << EOL
-ossp-uuid, postgresql
+postgresql
 EOL
 
 ## Build the package:

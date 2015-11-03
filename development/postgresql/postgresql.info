@@ -1,7 +1,7 @@
 PKGNAME=postgresql
-VERSION=9.2.4
+VERSION=9.4.5
 LICENSE=BSD
 HOMEPAGE=http://www.postgresql.org/
-DOWNLOAD=http://ftp.postgresql.org/pub/source/v9.2.4/postgresql-9.2.4.tar.bz2
-MD5SUM=6ee5bb53b97da7c6ad9cb0825d3300dd
-REQUIRES="ossp-uuid"
+DOWNLOAD=http://ftp.postgresql.org/pub/source/v9.4.5/postgresql-9.4.5.tar.bz2
+MD5SUM=8b2e3472a8dc786649b4d02d02e039a0
+REQUIRES=""

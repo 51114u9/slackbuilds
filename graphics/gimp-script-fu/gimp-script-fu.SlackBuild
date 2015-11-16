@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright 2010-2014 Marco Antonio Frias B., Cochabamba, BO
+# Copyright 2010-2015 Marco Antonio Frias B., Cochabamba, BO
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
@@ -22,7 +22,7 @@
 
 ## Name, version and buildtag of the package
 PRGNAME=gimp-script-fu
-VERSION=2.8_r41
+VERSION=2.8.14a
 ARCH=noarch
 RELEASE=1
 BUILDTAG=mfb
@@ -38,7 +38,7 @@ TMP=${TMP:-/tmp/build}
 PKG=$TMP/package-${PRGNAME}
 OUTPUT=${OUTPUT:-/tmp}
 
-SOURCE="$SRCDIR/gimp_scripts-$(echo ${VERSION} | cut -d '_' -f 1).tar.bz2"
+SOURCE="$SRCDIR/gimp_scripts-${VERSION}.tar.bz2"
 SRCURL="$(grep DOWNLOAD ${PRGNAME}.info | cut -d = -f 2)"
 
 ##

@@ -1,7 +1,7 @@
 PKGNAME=gimp-script-fu
-VERSION=2.8_r41
+VERSION=2.8.14a
 LICENSE=GPL-like
-HOMEPAGE=http://www.gimphelp.org/script28.shtml
-DOWNLOAD=http://www.gimphelp.org/DL/gimp_scripts-2.8.tar.bz2
-MD5SUM=4d1444fb590271ff585a14340c1b2f65
+HOMEPAGE=http://www.gimphelp.org/script28.html
+DOWNLOAD=http://www.gimphelp.org/DL/gimp_scripts-2.8.14a.tar.bz2
+MD5SUM=dfb0df6283eff59b3c21579c9a610041
 REQUIRES=""

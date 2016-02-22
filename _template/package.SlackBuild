@@ -166,6 +166,10 @@ sed -i "s@abc@xyz@" Makefile
 echo -e "\nBuilding $PRGNAME...\n"
 sleep 1
 
+NOCONFIGURE=yes \
+./autogen.sh \
+  2>&1 | tee $TMP/autogen-${PRGNAME}.log
+
 CFLAGS="$SLKCFLAGS" \
 LDFLAGS="$SLKLDFLAGS" \
 CXXFLAGS="$SLKCFLAGS" \

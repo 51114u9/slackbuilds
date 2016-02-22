@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright 2012-2013 Marco Antonio Frias B., Cochabamba, BO
+# Copyright 2012-2016 Marco Antonio Frias B., Cochabamba, BO
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
@@ -20,14 +20,19 @@
 #  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+## Set initial variables:
+
+## mapnik render
+WITH_MAPNIK=${WITH_MAPNIK:-"NO"}
+
 ## Name, version and buildtag of the package
 PRGNAME=viking
-VERSION=1.4.2
+VERSION=1.6.2
 RELEASE=1
 BUILDTAG=mfb
 
 ## The documentation files:
-DOCFILES="AUTHORS ChangeLog COPYING INSTALL NEWS README TODO"
+DOCFILES="AUTHORS ChangeLog COPYING HACKING NEWS README TODO"
 
 ## Where do we look for sources?
 SRCDIR=$(cd $(dirname $0); pwd)
@@ -43,6 +48,9 @@ SRCURL="$(grep DOWNLOAD ${PRGNAME}.info | cut -d = -f 2)"
 ##
 ## --- with a little luck, you won't have to edit below this point ---
 ##
+
+## I don't care if the user says "no", "NO", "yes" or "YES":
+WITH_MAPNIK=$(echo $WITH_MAPNIK | tr 'a-z' 'A-Z')
 
 ## Automatically determine the architecture we're building on:
 if [ -z "$ARCH" ]; then
@@ -121,12 +129,8 @@ find . \( -perm 777 -o -perm 775 -o -perm 711 -o -perm 555 -o -perm 511 \) -exec
 find . \( -perm 666 -o -perm 664 -o -perm 600 -o -perm 444 -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 chown -R root.root .
 
-echo -e "\nApply patches...\n"
-sleep 1
-
-## Apply patches first:
-echo "sed -i 's@Geography;@Geography;Education;@' src/viking.desktop.in"
-sed -i "s@Geography;@Geography;Education;@" src/viking.desktop.in
+## With MAPNIK if we are allowing it:
+[ "${WITH_MAPNIK}" == "YES" ] && USE_MAPNIK="--enable-mapnik" || USE_MAPNIK="--disable-mapnik"
 
 echo -e "\nBuilding $PRGNAME...\n"
 sleep 1
@@ -143,6 +147,7 @@ LDFLAGS="$SLKLDFLAGS" \
     --disable-scrollkeeper \
     --enable-expedia \
     --enable-geocaches \
+    ${USE_MAPNIK} \
     --program-prefix= \
     --program-suffix= \
     --build=$ARCH-slackware-linux \
@@ -185,7 +190,7 @@ install -m 644 $SRCDIR/doinst.sh $PKG/install
 install -m 644 $SRCDIR/slack-desc $PKG/install
 
 cat > $OUTPUT/${PRGNAME}-${VERSION}-${ARCH}-${RELEASE}${BUILDTAG}.dep << EOL
-gpsbabel, gpsd
+libgexiv2, gpsd
 EOL
 
 ## Build the package:

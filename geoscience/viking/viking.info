@@ -1,7 +1,7 @@
 PKGNAME=viking
-VERSION=1.6
+VERSION=1.6.2
 LICENSE=GPL-2
-HOMEPAGE=http://viking.sourceforge.net/
-DOWNLOAD=http://downloads.sourceforge.net/project/viking/viking-1.6.tar.bz2
-MD5SUM=
-REQUIRES="gpsd"
+HOMEPAGE=http://viking.sf.net/
+DOWNLOAD=http://downloads.sourceforge.net/project/viking/viking-1.6.2.tar.bz2
+MD5SUM=288cf8c6043ff4d04523595457fd5ed0
+REQUIRES="libgexiv2, gpsd"

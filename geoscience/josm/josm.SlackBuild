@@ -22,7 +22,7 @@
 
 ## Name, version and buildtag of the package
 PRGNAME=josm
-VERSION=r10743
+VERSION=r11066
 ARCH=noarch
 RELEASE=1
 BUILDTAG=mfb

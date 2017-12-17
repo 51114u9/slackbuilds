@@ -1,7 +1,0 @@
-PKGNAME=claws-mail
-VERSION=3.13.1
-LICENSE=GPL-3
-HOMEPAGE=http://www.claws-mail.org/
-DOWNLOAD=http://www.claws-mail.org/download.php?file=releases/claws-mail-3.13.1.tar.xz
-MD5SUM=5bbf7e2c24ca28f05d04de07c6fb8dad
-REQUIRES="libeptan"

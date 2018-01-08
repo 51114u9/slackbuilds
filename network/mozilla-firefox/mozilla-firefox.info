@@ -1,9 +1,9 @@
 PKGNAME=mozilla-firefox
-VERSION=56.0.2
+VERSION=57.0.4
 LICENSE=MPL-2.0_GPL-2_LGPL-2.1
 HOMEPAGE=http://www.mozilla.org/projects/firefox/
-DOWNLOAD=https://ftp.mozilla.org/pub/firefox/releases/56.0.2/linux-i686/en-US/firefox-56.0.2.tar.bz2
-DOWNLOAD_64=https://ftp.mozilla.org/pub/firefox/releases/56.0.2/linux-x86_64/en-US/firefox-56.0.2.tar.bz2
+DOWNLOAD=https://ftp.mozilla.org/pub/firefox/releases/57-0.4/linux-i686/en-US/firefox-57.0.4.tar.bz2
+DOWNLOAD_64=https://ftp.mozilla.org/pub/firefox/releases/57.0.4/linux-x86_64/en-US/firefox-57.0.4.tar.bz2
 MD5SUM=
-MD5SUM_64=1c52525689698ddbb00d448d097c142b
+MD5SUM_64=39c5ef862fee71230617b9fd6c7ffc0f
 REQUIRES="pulseaudio"

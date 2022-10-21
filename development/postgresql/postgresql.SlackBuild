@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright 2007-2015 Marco Antonio Frias B., Cochabamba, BO
+# Copyright 2007-2022 Marco Antonio Frias B., Cochabamba, BO
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
@@ -23,7 +23,7 @@
 
 ## Name, version and buildtag of the package
 PRGNAME=postgresql
-VERSION=9.4.5
+VERSION=9.4.26
 RELEASE=1
 BUILDTAG=mfb
 
